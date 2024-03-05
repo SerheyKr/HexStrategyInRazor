@@ -1,0 +1,131 @@
+html {
+	font-size: 14px;
+	position: relative;
+	min-height: 100%;
+	--hex-space: 2px;
+	--ratio: 0.4;
+}
+
+@media (min-width: 768px) {
+	html {
+		font-size: 16px;
+		position: relative;
+		min-height: 100%;
+	}
+}
+
+body {
+	white-space: nowrap;
+	margin-bottom: 60px;
+	--hexWidthInCol: calc(230px* var(--ratio));
+	--hexHeightInCol: calc(200px* var(--ratio));
+	--hexWidthInRow: calc(200px* var(--ratio));
+	--hexHeightInRow: calc(230px* var(--ratio));
+	--hex-border: calc(6px* var(--ratio));
+	--hexWidthInSquare: calc(172.5px* var(--ratio));
+}
+
+.hexBlock {
+	background-image: url("../images/grid.svg");
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: initial;
+	background-clip: border-box;
+	background-repeat: no-repeat;
+	background-size: calc(var(--hexWidthInCol));
+	width: calc(var(--hexWidthInCol) + var(--hex-space));
+	height: calc(var(--hexHeightInCol) + var(--hex-space));
+	top: calc(-1* var(--hex-space) / 2);
+	margin-left: calc(var(--ratio)* -59px);
+	left: calc(var(--ratio)* 57px);
+}
+
+	.hexBlock:nth-child(2n) {
+		top: calc(var(--hexHeightInCol)/2);
+	}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+	box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.hexagon2 {
+	width: calc(var(--hexWidthInCol) + var(--hex-space));
+	height: calc(var(--hexHeightInCol) + var(--hex-space));
+	clip-path: polygon(0 50%, 25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%);
+	text-align: center;
+	color: black;
+	justify-content: center;
+	align-items: center;
+	display: inline-flex;
+}
+.ground {
+	background-color: #dbb9b973
+}
+
+#buttonsWithImages
+{
+	position: absolute;
+	background-color: transparent;
+}
+/*#border:hover {
+	box-shadow: inset 0 0 0 23px #53ea93;
+	background: #53ea93;
+}*/
+/*@media (pointer: fine) {
+	#border:hover {
+		transform: translateY(0px);
+	}
+
+	#border {
+		transform: translateY(-40px);
+	}
+}*/
+
+#canvas {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	z-index: -3;
+}
+
+.hex-container {
+	display: flex;
+	flex-direction: column;
+}
+
+.hex-row {
+	display: flex;
+	justify-content: space-between;
+}
+
+.hex {
+	position: relative;
+	width: 50px;
+	height: 50px;
+	background-color: #3498db;
+	margin-top: 25px;
+}
+
+	.hex:before,
+	.hex:after {
+		content: "";
+		position: absolute;
+		width: 0;
+		border-left: 25px solid transparent;
+		border-right: 25px solid transparent;
+	}
+
+	.hex:before {
+		bottom: 100%;
+		border-bottom: 15px solid #3498db;
+	}
+
+	.hex:after {
+		top: 100%;
+		width: 0;
+		border-top: 15px solid #3498db;
+	}
+
+

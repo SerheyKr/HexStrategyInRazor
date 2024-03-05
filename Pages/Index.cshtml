@@ -1,0 +1,62 @@
+﻿@page
+@using WebApplication1.Generator
+@model IndexModel
+@{
+	ViewData["Title"] = "Home page";
+}
+
+@* <div class="text-center">
+	<h1 class="display-4">Welcome</h1>
+	<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<ul>
+	@foreach (var user in Program.Context.UsersRepository.GetAll().ToList())
+	{
+		<li>@user.ToString()</li>
+	}
+</ul> *@
+
+@* @for (int i = 0; i < Program.wm.Regions.Count; i++)
+{
+	topPos = $"{40}px";
+	leftPos = $"{40}px";
+	region = Program.wm.Regions[i];
+	<span style="position: fixed; top: @topPos; left: @leftPos; position: absolute; background-color: transparent;
+background-image: url(@region.ImagePath);" ; onmousedown="console.log('@i')">
+		<img src="@region.ImagePath" id="buttonsWithImages"  />
+
+	</span>
+} *@
+
+@* <map id="@i" name="@i">
+	<area alt="" coords="140, 150, 140"  href=""  shape="circle" />
+	</map> *@
+<div id="data-container">
+	DATA
+</div>
+<section cite="hexMap">
+	@for (int i = 0; i < Model.newMap.Rows.Count; i++)
+	{
+		var row = Model.newMap.Rows[i];
+		<article class="hexLine">
+			@for (int j = 0; j < row.Cells.Count(); j++)
+			{
+				var cell = row.Cells[j];
+				<div class="hexBlock" id="cell-@cell.Position.X-@cell.Position.Y">
+					<style>
+						@("." + cell.ID)
+						{
+							/* background-color: @cell.CellColorHTML; */
+						}
+					</style>
+					<div class="hexagon2 @cell.ID" onclick="console.log('Cell X:@cell.Position.X Y:@cell.Position.Y')">
+						U:@cell.unitsCount B:@cell.buildingsCount D:@cell.defenceCount <br />
+						C: @cell.ControllerName
+					</div>
+					@* U:@cell.unitsCount B:@cell.buildingsCount D:@cell.defenceCount *@
+				</div>
+			}
+		</article>
+	}
+</section>
