@@ -1,6 +1,53 @@
 [
   {
     "ContainingType": "WebApplication1.Program\u002B\u003C\u003Ec",
+    "Method": "\u003CSetUpWebApplication\u003Eb__12_1",
+    "RelativePath": "getCellData",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "xCoords",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "yCoords",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebApplication1.Program\u002B\u003C\u003Ec",
+    "Method": "\u003CSetUpWebApplication\u003Eb__12_2",
+    "RelativePath": "getCellsData",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "WebApplication1.Program\u002B\u003C\u003Ec",
     "Method": "\u003CSetUpWebApplication\u003Eb__12_0",
     "RelativePath": "getData",
     "HttpMethod": "GET",

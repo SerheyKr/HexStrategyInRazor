@@ -38,7 +38,16 @@ namespace WebApplication1.Generator
 				{
 					var nc = nr.Cells[i];
 
-					nc.neighbors.Add(nc);
+					for (int x = -1; x < 1; x++)
+						for (int y = -1; y < 1; y++)
+						{
+							if (x != 0 && y != 0 &&
+								i + x > 0 && j + y > 0 &&
+								i + x < Rows.Count && j + y < Rows[i + x].Cells.Count)
+							{
+								nc.neighbors.Add(Rows[i + x].Cells[j + y]);
+							}
+						}
 				}
 			}
 		}

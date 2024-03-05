@@ -9,79 +9,105 @@ using WebApplication1.Generator;
 
 namespace WebApplication1
 {
-    public static class Program
-    {
-        private static WadbContext context;
-        private static WebApplication application;
-        private static IConfigurationRoot configuration;
+	public static class Program
+	{
+		private static WadbContext context;
+		private static WebApplication application;
+		private static IConfigurationRoot configuration;
 
-        public static WadbContext Context { get => context;}
-        public static WebApplication App { get => application;}
-        public static IConfigurationRoot Configuration { get => configuration;}
+		public static WadbContext Context { get => context;}
+		public static WebApplication App { get => application;}
+		public static IConfigurationRoot Configuration { get => configuration;}
+		public static List<BrowserUser> AllUsers = new ();
 
-        public static WorldMap wm;
+		private static void Main(string[] args)
+		{
+			configuration = new ConfigurationBuilder()
+			.AddJsonFile("appsettings.json", optional: false)
+			.Build();
 
-        private static void Main(string[] args)
-        {
-            configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: false)
-            .Build();
+			context = SetUpDb(configuration);
 
-            context = SetUpDb(configuration);
+			context.UsersRepository.Add(new User() { Id = 0, UserName = "UserName", Password = "Password", Email = "7366723@stud.nau.edu.ua" });
+			context.UsersRepository.Add(new User() { Id = 0, UserName = "Test", Password = "Test", Email = "7366723@stud.nau.edu.ua" });
+			context.UsersRepository.Add(new User() { Id = 0, UserName = "Admin", Password = "123", Email = "7366723@stud.nau.edu.ua" });
 
-            context.UsersRepository.Add(new User() { Id = 0, UserName = "UserName", Password = "Password", Email = "7366723@stud.nau.edu.ua" });
-            context.UsersRepository.Add(new User() { Id = 0, UserName = "Test", Password = "Test", Email = "7366723@stud.nau.edu.ua" });
-            context.UsersRepository.Add(new User() { Id = 0, UserName = "Admin", Password = "123", Email = "7366723@stud.nau.edu.ua" });
+			context.SaveChanges();
 
-            context.SaveChanges();
+			application = SetUpWebApplication(configuration);
+		}
 
-            application = SetUpWebApplication(configuration);
-        }
+		private static WadbContext SetUpDb(IConfigurationRoot configuration)
+		{
+			var options = new DbContextOptionsBuilder<WadbContext>();
+			WadbContext cont = new(options.Options, configuration.GetConnectionString("connectionPath"));
+			cont.Database.EnsureDeleted();
+			if (cont.Database.EnsureCreated())
+			{
+				Console.WriteLine("DB created");
+			}
 
-        private static WadbContext SetUpDb(IConfigurationRoot configuration)
-        {
-            var options = new DbContextOptionsBuilder<WadbContext>();
-            WadbContext cont = new(options.Options, configuration.GetConnectionString("connectionPath"));
-            cont.Database.EnsureDeleted();
-            if (cont.Database.EnsureCreated())
-            {
-                Console.WriteLine("DB created");
-            }
+			return cont;
+		}
 
-            return cont;
-        }
+		private static WebApplication SetUpWebApplication(IConfigurationRoot configuration) 
+		{
+			WebApplicationBuilder builder = WebApplication.CreateBuilder();
 
-        private static WebApplication SetUpWebApplication(IConfigurationRoot configuration) 
-        {
-            WebApplicationBuilder builder = WebApplication.CreateBuilder();
+			// Add services to the container.
+			builder.Services.AddRazorPages();
 
-            // Add services to the container.
-            builder.Services.AddRazorPages();
+			WebApplication app = builder.Build();
 
-            WebApplication app = builder.Build();
+			// Configure the HTTP request pipeline.
+			if (!app.Environment.IsDevelopment())
+			{
+				app.UseExceptionHandler("/Error");
+				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+				app.UseHsts();
+				//app.UseSession(new SessionOptions()
+				//{
+				//	IdleTimeout = TimeSpan.FromMinutes(5),
+				//	Cookie = new CookieBuilder()
+				//	{
+				//		HttpOnly = true,
+				//		IsEssential = true
+				//	}
+				//});
+			}
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+			app.UseHttpsRedirection();
+			app.UseStaticFiles();
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+			app.MapGet("/getData", (HttpContext context) => $"{GetTime()}: COOKIES DUDE: {context.Request.Cookies["USERID"]}");
+			app.MapGet("/getCellData", (int xCoords, int yCoords) => $"Coords - {xCoords} : {yCoords}");
+			app.MapGet("/getCellsData", () => "CELLS");
 
-            app.MapGet("/getData", () => $"{DateTime.Now}");
+			app.UseRouting();
 
-            app.UseRouting();
+			app.UseAuthorization();
 
-            app.UseAuthorization();
+			app.UseCookiePolicy(new CookiePolicyOptions()
+			{
+				MinimumSameSitePolicy = SameSiteMode.None,
+			});
 
-            app.MapRazorPages();
+			app.MapRazorPages();
 
-            app.Run();
+			app.Run();
 
-            return app;
-        }
-    }
+			return app;
+		}
+
+		private static string GetTime()
+		{
+			return DateTime.Now.ToString();
+		}
+	}
+
+	public class BrowserUser
+	{
+		public WorldMap UserCurrentWorld;
+		public string UserId;
+	}
 }

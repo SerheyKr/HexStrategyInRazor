@@ -17,14 +17,40 @@ namespace WebApplication1.Pages
 
 		public void OnGetAsync()
 		{
-			Console.WriteLine("GETED");
-			var players = new List<Player>()
-			{
-				new (Color.Blue, "F"),
-				new (Color.Red, "E")
-			};
+			string userId = Request.Cookies["USERID"];
 
-			newMap = WorldMap.CreateMap(new System.Numerics.Vector2(4, 8), players);
+			if (string.IsNullOrEmpty(userId))
+			{
+				userId = Guid.NewGuid().ToString();
+				Response.Cookies.Append("USERID", userId);
+				Program.AllUsers.Add(new BrowserUser()
+				{
+					UserId = userId
+				});
+			}
+
+			var players = new List<Player>()
+				{
+					new (Color.Blue, "F"),
+					new (Color.Red, "E")
+				};
+
+			var user = Program.AllUsers.Find(x => x.UserId == userId);
+			if (user == null)
+			{
+				user = new BrowserUser() { UserId = userId };
+				Program.AllUsers.Add(user);
+				newMap = WorldMap.CreateMap(new System.Numerics.Vector2(4, 8), players);
+			}
+			if (user.UserCurrentWorld == null)
+			{
+				newMap = WorldMap.CreateMap(new System.Numerics.Vector2(4, 8), players);
+				user.UserCurrentWorld = newMap;
+			}
+			else
+			{
+				newMap = user.UserCurrentWorld;
+			}
 		}
 	}
 }

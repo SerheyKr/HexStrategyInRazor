@@ -128,8 +128,20 @@ function updateData() {
 	});
 }
 
-// Call updateData function initially
+function updateCellData() {
+	$.ajax({
+		url: '/getData', // URL to your server endpoint to fetch data
+		method: 'GET',
+		success: function (data) {
+			// Update the data container with new data
+			$('#data-container').html(data);
+		},
+		error: function (xhr, status, error) {
+			console.error('Error fetching data:', error);
+		}
+	});
+}
+
 updateData();
 
-// Set interval to call updateData every 5 seconds (for example)
 setInterval(updateData, 1000); // 5000 milliseconds = 5 seconds
