@@ -1,7 +1,7 @@
 [
   {
-    "ContainingType": "WebApplication1.Program\u002B\u003C\u003Ec",
-    "Method": "\u003CSetUpWebApplication\u003Eb__12_1",
+    "ContainingType": "HexStrategyInRazor.Program\u002B\u003C\u003Ec",
+    "Method": "\u003CSetUpWebApplication\u003Eb__11_1",
     "RelativePath": "getCellData",
     "HttpMethod": "GET",
     "IsController": false,
@@ -29,8 +29,8 @@
     ]
   },
   {
-    "ContainingType": "WebApplication1.Program\u002B\u003C\u003Ec",
-    "Method": "\u003CSetUpWebApplication\u003Eb__12_2",
+    "ContainingType": "HexStrategyInRazor.Managers.WorldMapManager",
+    "Method": "GetCells",
     "RelativePath": "getCellsData",
     "HttpMethod": "GET",
     "IsController": false,
@@ -47,8 +47,8 @@
     ]
   },
   {
-    "ContainingType": "WebApplication1.Program\u002B\u003C\u003Ec",
-    "Method": "\u003CSetUpWebApplication\u003Eb__12_0",
+    "ContainingType": "HexStrategyInRazor.Program\u002B\u003C\u003Ec",
+    "Method": "\u003CSetUpWebApplication\u003Eb__11_0",
     "RelativePath": "getData",
     "HttpMethod": "GET",
     "IsController": false,

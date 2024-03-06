@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WebApplication1.DB.Interfaces;
-using WebApplication1.DB.Models;
-using WebApplication1.DB.Respository;
+﻿using HexStrategyInRazor.Map.DB.Interfaces;
+using HexStrategyInRazor.Map.DB.Models;
+using HexStrategyInRazor.Map.DB.Respository;
+using Microsoft.EntityFrameworkCore;
 
-namespace WebApplication1.DB
+namespace HexStrategyInRazor.DB
 {
     public class WadbContext(DbContextOptions<WadbContext> options, string connectionString) : DbContext(options)
     {

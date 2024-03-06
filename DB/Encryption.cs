@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace WebApplication1.DB
+namespace HexStrategyInRazor.Map.DB
 {
 	public static class Encryption
 	{

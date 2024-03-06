@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using WebApplication1.DB.Interfaces;
-using WebApplication1.DB.Models;
+using HexStrategyInRazor.Map.DB.Interfaces;
+using HexStrategyInRazor.DB;
+using HexStrategyInRazor.Map.DB.Models;
 
-namespace WebApplication1.DB.Respository
+namespace HexStrategyInRazor.Map.DB.Respository
 {
     public class UserRespository : AbstractRepository<User>, IUserRepository
     {

@@ -1,5 +1,5 @@
 ﻿@page
-@using WebApplication1.Generator
+@using HexStrategyInRazor.Generator
 @model IndexModel
 @{
 	ViewData["Title"] = "Home page";
@@ -51,8 +51,9 @@ background-image: url(@region.ImagePath);" ; onmousedown="console.log('@i')">
 						}
 					</style>
 					<div class="hexagon2 @cell.ID" onclick="console.log('Cell X:@cell.Position.X Y:@cell.Position.Y')">
-						U:@cell.unitsCount B:@cell.buildingsCount D:@cell.defenceCount <br />
-						C: @cell.ControllerName
+						@* U:@cell.unitsCount B:@cell.buildingsCount D:@cell.defenceCount <br />
+						C: @cell.ControllerName *@
+						X:@cell.Position.X Y:@cell.Position.Y
 					</div>
 					@* U:@cell.unitsCount B:@cell.buildingsCount D:@cell.defenceCount *@
 				</div>

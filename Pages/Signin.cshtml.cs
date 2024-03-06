@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace WebApplication1.Pages
+namespace HexStrategyInRazor.Pages
 {
     public class SigninModel : PageModel
     {

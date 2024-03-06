@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Numerics;
 
-namespace WebApplication1.Generator
+namespace HexStrategyInRazor.Generator
 {
     public static class PerlinNoise
     {

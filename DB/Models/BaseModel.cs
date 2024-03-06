@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication1.DB.Models
+namespace HexStrategyInRazor.Map.DB.Models
 {
     public abstract class BaseModel
     {

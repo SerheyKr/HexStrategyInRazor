@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 
-namespace WebApplication1.EmailService
+namespace HexStrategyInRazor.EmailService
 {
     public static class EmailService
     {

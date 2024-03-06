@@ -1,8 +1,9 @@
-﻿using Svg;
+﻿using HexStrategyInRazor.Generator;
+using Svg;
 using System.Drawing;
 using System.Numerics;
 
-namespace WebApplication1.Generator
+namespace HexStrategyInRazor.Map
 {
 	public class WMCell
 	{
@@ -20,7 +21,7 @@ namespace WebApplication1.Generator
 		{
 			get
 			{
-				return $"CoordsX{Position.X.ToString()}Y{Position.Y}";
+				return $"CoordsX{Position.X}Y{Position.Y}";
 			}
 		}
 
@@ -30,8 +31,8 @@ namespace WebApplication1.Generator
 			{
 				if (controller == null)
 					return Color.FromArgb(120, 0, 0, 0);
-				
-				return controller.playerColor;
+
+				return controller.PlayerColor;
 			}
 		}
 
@@ -41,8 +42,8 @@ namespace WebApplication1.Generator
 			{
 				if (controller == null)
 					return "None";
-				
-				return controller.playerName;
+
+				return controller.PlayerName;
 			}
 		}
 
@@ -52,24 +53,26 @@ namespace WebApplication1.Generator
 			{
 				if (controller == null)
 					return ColorTranslator.ToHtml(emptyColor);
-				return ColorTranslator.ToHtml(controller.playerColor);
+				return ColorTranslator.ToHtml(controller.PlayerColor);
 			}
 		}
 
-		public Vector2 Position { get => position;}
+		public Vector2 Position { get => position; }
 
 		public WMCell(Vector2 position)
 		{
 			this.position = position;
 		}
-	}
 
-	public class WMCellData
-	{
-		public int unitsCount = 0;
-		public int buildingsCount = 0;
-		public int defenceCount = 0;
-		public int positionX;
-		public int positionY;
+		public WMCellData ToData()
+		{
+			return new WMCellData()
+			{
+				buildingsCount = buildingsCount,
+				defenceCount = defenceCount,
+				unitsCount = unitsCount,
+				positionId = ID,
+			};
+		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿namespace WebApplication1
+﻿namespace HexStrategyInRazor
 {
     public abstract class Singleton<T> where T : class, new()
     {

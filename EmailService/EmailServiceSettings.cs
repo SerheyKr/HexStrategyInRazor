@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.EmailService
+﻿namespace HexStrategyInRazor.EmailService
 {
     public class EmailServiceSettings : Singleton<EmailServiceSettings>
     {

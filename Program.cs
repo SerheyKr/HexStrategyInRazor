@@ -1,13 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using WebApplication1.DB;
-using WebApplication1.DB.Models;
-using WebApplication1.Generator;
+using HexStrategyInRazor.DB;
+using HexStrategyInRazor.DB.Models;
+using HexStrategyInRazor.Map;
+using HexStrategyInRazor.Map.DB.Models;
+using HexStrategyInRazor.Managers;
 
-namespace WebApplication1
+namespace HexStrategyInRazor
 {
 	public static class Program
 	{
@@ -18,7 +16,6 @@ namespace WebApplication1
 		public static WadbContext Context { get => context;}
 		public static WebApplication App { get => application;}
 		public static IConfigurationRoot Configuration { get => configuration;}
-		public static List<BrowserUser> AllUsers = new ();
 
 		private static void Main(string[] args)
 		{
@@ -81,7 +78,7 @@ namespace WebApplication1
 
 			app.MapGet("/getData", (HttpContext context) => $"{GetTime()}: COOKIES DUDE: {context.Request.Cookies["USERID"]}");
 			app.MapGet("/getCellData", (int xCoords, int yCoords) => $"Coords - {xCoords} : {yCoords}");
-			app.MapGet("/getCellsData", () => "CELLS");
+			app.MapGet("/getCellsData", WorldMapManager.GetCells);
 
 			app.UseRouting();
 
@@ -103,11 +100,5 @@ namespace WebApplication1
 		{
 			return DateTime.Now.ToString();
 		}
-	}
-
-	public class BrowserUser
-	{
-		public WorldMap UserCurrentWorld;
-		public string UserId;
 	}
 }

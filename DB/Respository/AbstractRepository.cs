@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApplication1.DB.Models;
+using HexStrategyInRazor.Map.DB.Models;
+using HexStrategyInRazor.DB;
 
-namespace WebApplication1.DB.Respository
+namespace HexStrategyInRazor.Map.DB.Respository
 {
     public abstract class AbstractRepository<T> where T : class
     {

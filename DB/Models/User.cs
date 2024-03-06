@@ -1,13 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace WebApplication1.DB.Models
+namespace HexStrategyInRazor.Map.DB.Models
 {
     public class User: BaseModel
     {
         public string UserName { get; set; }
         public string Password { get; set; }
         public string Email { get; set; }
+        public string CookieID { get; set; } = "";
         
         public bool IsDecripted = false;
 
@@ -18,7 +19,7 @@ namespace WebApplication1.DB.Models
 
         public override string ToString()
         {
-            return $"{UserName} {Password} {Email}";
+            return $"{UserName} {Password} {Email} {CookieID}";
         }
     }
 }

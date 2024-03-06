@@ -1,6 +1,6 @@
-﻿using WebApplication1.DB.Models;
+﻿using HexStrategyInRazor.Map.DB.Models;
 
-namespace WebApplication1.DB.Respository
+namespace HexStrategyInRazor.Map.DB.Respository
 {
     public interface IUserRespository
     {

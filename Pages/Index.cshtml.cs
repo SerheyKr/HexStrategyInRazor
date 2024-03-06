@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Drawing;
-using WebApplication1.Generator;
+using HexStrategyInRazor.Generator;
+using HexStrategyInRazor.Map;
+using HexStrategyInRazor.Managers;
 
-namespace WebApplication1.Pages
+namespace HexStrategyInRazor.Pages
 {
 	public class IndexModel : PageModel
 	{
@@ -17,33 +19,32 @@ namespace WebApplication1.Pages
 
 		public void OnGetAsync()
 		{
-			string userId = Request.Cookies["USERID"];
+			string? userId = Request.Cookies["USERID"];
 
 			if (string.IsNullOrEmpty(userId))
 			{
 				userId = Guid.NewGuid().ToString();
 				Response.Cookies.Append("USERID", userId);
-				Program.AllUsers.Add(new BrowserUser()
+				PlayerManager.AllUsers.Add(new BrowserUser()
 				{
 					UserId = userId
 				});
 			}
 
-			var players = new List<Player>()
-				{
-					new (Color.Blue, "F"),
-					new (Color.Red, "E")
-				};
-
-			var user = Program.AllUsers.Find(x => x.UserId == userId);
+			var user = PlayerManager.AllUsers.Find(x => x.UserId == userId);
 			if (user == null)
 			{
 				user = new BrowserUser() { UserId = userId };
-				Program.AllUsers.Add(user);
-				newMap = WorldMap.CreateMap(new System.Numerics.Vector2(4, 8), players);
+				PlayerManager.AllUsers.Add(user);
 			}
 			if (user.UserCurrentWorld == null)
 			{
+				var players = new List<Player>()
+				{
+					new (Color.Blue, "F", user, true),
+					new (Color.Red, "E")
+				};
+
 				newMap = WorldMap.CreateMap(new System.Numerics.Vector2(4, 8), players);
 				user.UserCurrentWorld = newMap;
 			}
