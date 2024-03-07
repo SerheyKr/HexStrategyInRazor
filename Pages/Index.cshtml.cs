@@ -10,6 +10,7 @@ namespace HexStrategyInRazor.Pages
 	public class IndexModel : PageModel
 	{
 		public WorldMap newMap;
+		public Player currentPlayer;
 		private readonly ILogger<IndexModel> _logger;
 
 		public IndexModel(ILogger<IndexModel> logger)
@@ -19,12 +20,12 @@ namespace HexStrategyInRazor.Pages
 
 		public void OnGetAsync()
 		{
-			string? userId = Request.Cookies["USERID"];
+			string? userId = Request.Cookies[Program.userIdCookieName];
 
 			if (string.IsNullOrEmpty(userId))
 			{
 				userId = Guid.NewGuid().ToString();
-				Response.Cookies.Append("USERID", userId);
+				Response.Cookies.Append(Program.userIdCookieName, userId, Program.cookieOptions);
 				PlayerManager.AllUsers.Add(new BrowserUser()
 				{
 					UserId = userId
@@ -39,9 +40,10 @@ namespace HexStrategyInRazor.Pages
 			}
 			if (user.UserCurrentWorld == null)
 			{
+				currentPlayer = new Player(Color.Blue, "F", user, true);
 				var players = new List<Player>()
 				{
-					new (Color.Blue, "F", user, true),
+					currentPlayer,
 					new (Color.Red, "E")
 				};
 
@@ -51,6 +53,7 @@ namespace HexStrategyInRazor.Pages
 			else
 			{
 				newMap = user.UserCurrentWorld;
+				currentPlayer = user.UserCurrentWorld.Players.Single(x => x.User?.UserId == userId);
 			}
 		}
 	}

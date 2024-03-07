@@ -1,7 +1,5 @@
 ﻿using HexStrategyInRazor.Generator;
 using HexStrategyInRazor.Managers;
-using HexStrategyInRazor.Map;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
 
@@ -10,7 +8,7 @@ namespace HexStrategyInRazor.Map
     public class WorldMap
 	{
 		public List<WMRow> Rows = new List<WMRow>();
-		public List<Player> players = new List<Player>();
+		public List<Player> Players = new List<Player>();
 		public string HostId;
 
 		private WorldMap()
@@ -74,7 +72,9 @@ namespace HexStrategyInRazor.Map
 
 		private void PlacePlayers(List<Player> players)
 		{
-			foreach (var np in players)
+			Players = players;
+
+			foreach (var np in Players)
 			{
 				np.PlayerColor = Color.Red;
 				WMCell randomCell;
@@ -135,5 +135,6 @@ namespace HexStrategyInRazor.Map
 		public int buildingsCount { get; set; }
 		public int defenceCount { get; set; }
 		public string positionId{ get; set; }
+		public string controllerId { get; set; }
 	}
 }

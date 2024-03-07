@@ -13,6 +13,15 @@ namespace HexStrategyInRazor
 		private static WebApplication application;
 		private static IConfigurationRoot configuration;
 
+		public const string userIdCookieName = "USERID";
+		public static readonly CookieOptions cookieOptions = new CookieOptions()
+		{
+			Path = @"\",
+			HttpOnly = true,
+			IsEssential = true,
+			Expires = DateTime.Now.AddMonths(1) // TODO think about it
+		};
+
 		public static WadbContext Context { get => context;}
 		public static WebApplication App { get => application;}
 		public static IConfigurationRoot Configuration { get => configuration;}
@@ -53,6 +62,11 @@ namespace HexStrategyInRazor
 
 			// Add services to the container.
 			builder.Services.AddRazorPages();
+			builder.Services.Configure<CookiePolicyOptions>(options => 
+			{
+				options.CheckConsentNeeded = context => true;
+				options.MinimumSameSitePolicy = SameSiteMode.None;
+			});
 
 			WebApplication app = builder.Build();
 
@@ -76,9 +90,10 @@ namespace HexStrategyInRazor
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
-			app.MapGet("/getData", (HttpContext context) => $"{GetTime()}: COOKIES DUDE: {context.Request.Cookies["USERID"]}");
+			app.MapGet("/getData", (HttpContext context) => $"{GetTime()}: COOKIES DUDE: {context.Request.Cookies[userIdCookieName]}");
 			app.MapGet("/getCellData", (int xCoords, int yCoords) => $"Coords - {xCoords} : {yCoords}");
-			app.MapGet("/getCellsData", WorldMapManager.GetCells);
+			app.MapGet("/getMapData", WorldMapManager.GetCells);
+			app.MapGet("/getUserInfo", WorldMapManager.GetPlayerInfo);
 
 			app.UseRouting();
 
@@ -86,7 +101,7 @@ namespace HexStrategyInRazor
 
 			app.UseCookiePolicy(new CookiePolicyOptions()
 			{
-				MinimumSameSitePolicy = SameSiteMode.None,
+				
 			});
 
 			app.MapRazorPages();

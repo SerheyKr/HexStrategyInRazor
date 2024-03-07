@@ -1,7 +1,7 @@
 [
   {
     "ContainingType": "HexStrategyInRazor.Program\u002B\u003C\u003Ec",
-    "Method": "\u003CSetUpWebApplication\u003Eb__11_1",
+    "Method": "\u003CSetUpWebApplication\u003Eb__13_2",
     "RelativePath": "getCellData",
     "HttpMethod": "GET",
     "IsController": false,
@@ -29,9 +29,9 @@
     ]
   },
   {
-    "ContainingType": "HexStrategyInRazor.Managers.WorldMapManager",
-    "Method": "GetCells",
-    "RelativePath": "getCellsData",
+    "ContainingType": "HexStrategyInRazor.Program\u002B\u003C\u003Ec",
+    "Method": "\u003CSetUpWebApplication\u003Eb__13_1",
+    "RelativePath": "getData",
     "HttpMethod": "GET",
     "IsController": false,
     "Order": 0,
@@ -47,9 +47,27 @@
     ]
   },
   {
-    "ContainingType": "HexStrategyInRazor.Program\u002B\u003C\u003Ec",
-    "Method": "\u003CSetUpWebApplication\u003Eb__11_0",
-    "RelativePath": "getData",
+    "ContainingType": "HexStrategyInRazor.Managers.WorldMapManager",
+    "Method": "GetCells",
+    "RelativePath": "getMapData",
+    "HttpMethod": "GET",
+    "IsController": false,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.String",
+        "MediaTypes": [
+          "text/plain"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HexStrategyInRazor.Managers.WorldMapManager",
+    "Method": "GetPlayerInfo",
+    "RelativePath": "getUserInfo",
     "HttpMethod": "GET",
     "IsController": false,
     "Order": 0,
