@@ -109,6 +109,18 @@
       "PackagePath": "staticwebassets\\images\\grid.svg"
     },
     {
+      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\js\\WorldCellData.js",
+      "PackagePath": "staticwebassets\\js\\WorldCellData.js"
+    },
+    {
+      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\js\\WorldMapData.js",
+      "PackagePath": "staticwebassets\\js\\WorldMapData.js"
+    },
+    {
+      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\js\\WorldRowData.js",
+      "PackagePath": "staticwebassets\\js\\WorldRowData.js"
+    },
+    {
       "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

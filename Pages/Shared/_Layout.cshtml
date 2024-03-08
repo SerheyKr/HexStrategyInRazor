@@ -6,23 +6,19 @@
     <title>@ViewData["Title"] - WebApplication1</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
+
+    <@* link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" /> *@
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
 </head>
 <body>
     @* <canvas id="canvas" width="800" height="800"></canvas> *@
 
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous"></script>
 
     <header>
         <nav class="show navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" id="border">
             <div class="container">
-                @* <a class="navbar-brand" asp-area="" asp-page="/Index">WebApplication1</a> *@
-                @* <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button> *@
                 <div class="show navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li>
@@ -34,27 +30,8 @@
                         <li>
                             <a class="nav-link text-dark">Total buildings: 9999</a>
                         </li>
-                        @* <li type="button">
-                            <a class="nav-link text-dark">Start a new game</a>
-                        </li> *@
-                        @*
-                            <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Error">Error</a>
-                        </li> *@
                     </ul>
                 </div>
-                @* <a type="button" class="nav-link" asp-page="/Login">
-                    Log in
-                </a>
-                <a type="button" class="nav-link" asp-page="/Signin">
-                    Sign in
-                </a> *@
             </div>
         </nav>
     </header>
@@ -81,7 +58,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

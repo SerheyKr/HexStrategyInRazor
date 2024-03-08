@@ -20,4 +20,8 @@
     <None Include="wwwroot\images\*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NpmJS\" />
+  </ItemGroup>
+
 </Project>

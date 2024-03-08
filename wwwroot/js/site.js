@@ -1,6 +1,6 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
-
+import { jsonIgnore } from "ts-serializable";
 
 const canvas = document.getElementById("canvas");
 var currentTileId = "";
@@ -55,29 +55,26 @@ function updateData() {
 	});
 }
 
-function updateCellData() {
+function updateMapData() {
 	$.ajax({
-		url: '/getData', // URL to your server endpoint to fetch data
+		url: '/getMapData', // URL to your server endpoint to fetch data
 		method: 'GET',
 		success: function (data) {
-			// Update the data container with new data
-			$('#data-container').html(data);
+			let json = JSON.stringify(data);
+
+			let map = new WorldMapData().fromJSON(json);
+			console.log(map);
 		},
 	});
 }
 
-//function sentArmy(elementMouseIsOverId) {
-//	if (currentTileId != "") {
-//		console.log(elementMouseIsOverId + ":" + currentTileId.id);
-//		$.ajax({
-//			url: '/sendArmyData',
-//			method: 'POST',
-//			data: "AGA" + "sendArmyCount" + elementMouseIsOverId + ":" + currentTileId.id,
-//		});
-
-//		currentTileId = "";
-//	}
-//}
+function restartMap() {
+	console.log("Map is restarting...");
+	$.ajax({
+		url: '/restartMap',
+		method: 'POST',
+	});
+}
 
 $(window).click(function (e) {
 	let x = e.clientX, y = e.clientY,
@@ -99,3 +96,4 @@ $(window).click(function (e) {
 updateData();
 
 setInterval(updateData, 1000); // 5000 milliseconds = 5 seconds
+/*setInterval(updateMapData, 1000); // 5000 milliseconds = 5 seconds*/

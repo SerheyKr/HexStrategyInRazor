@@ -79,6 +79,14 @@ namespace HexStrategyInRazor.Managers
 			{
 				return;
 			}
+
+			WorldMap? wm = WorldMaps.Find(x => x.HostId == userId);
+			if (wm == null)
+			{
+				return;
+			}
+
+			wm.Restart();
 		}
 	}
 }
