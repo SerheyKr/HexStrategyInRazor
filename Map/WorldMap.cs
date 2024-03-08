@@ -10,6 +10,7 @@ namespace HexStrategyInRazor.Map
 		public List<WMRow> Rows = new List<WMRow>();
 		public List<Player> Players = new List<Player>();
 		public string HostId;
+		public Vector2 Sizes;
 
 		private WorldMap()
 		{
@@ -18,6 +19,8 @@ namespace HexStrategyInRazor.Map
 
 		private void GenerateBasicCells(Vector2 sizes)
 		{
+			Sizes = sizes;
+
 			for (int i = 0; i < sizes.X; i++)
 			{
 				var nr = new WMRow();
@@ -84,7 +87,6 @@ namespace HexStrategyInRazor.Map
 				} while (randomCell.controller != null);
 
 				randomCell.controller = np;
-				randomCell.unitsCount = 1;
 				randomCell.buildingsCount = 1;
 			}
 		}
@@ -116,6 +118,13 @@ namespace HexStrategyInRazor.Map
 			{
 				Rows = x
 			};
+		}
+
+		public void Restart()
+		{
+			GenerateBasicCells(Sizes);
+			PlacePlayers(Players);
+			SetNeighbors();
 		}
 	}
 

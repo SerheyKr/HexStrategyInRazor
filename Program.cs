@@ -34,9 +34,9 @@ namespace HexStrategyInRazor
 
 			context = SetUpDb(configuration);
 
-			context.UsersRepository.Add(new User() { Id = 0, UserName = "UserName", Password = "Password", Email = "7366723@stud.nau.edu.ua" });
-			context.UsersRepository.Add(new User() { Id = 0, UserName = "Test", Password = "Test", Email = "7366723@stud.nau.edu.ua" });
-			context.UsersRepository.Add(new User() { Id = 0, UserName = "Admin", Password = "123", Email = "7366723@stud.nau.edu.ua" });
+			//context.UsersRepository.Add(new User() { Id = 0, UserName = "UserName", Password = "Password", Email = "7366723@stud.nau.edu.ua" });
+			//context.UsersRepository.Add(new User() { Id = 0, UserName = "Test", Password = "Test", Email = "7366723@stud.nau.edu.ua" });
+			//context.UsersRepository.Add(new User() { Id = 0, UserName = "Admin", Password = "123", Email = "7366723@stud.nau.edu.ua" });
 
 			context.SaveChanges();
 
@@ -94,6 +94,8 @@ namespace HexStrategyInRazor
 			app.MapGet("/getCellData", (int xCoords, int yCoords) => $"Coords - {xCoords} : {yCoords}");
 			app.MapGet("/getMapData", WorldMapManager.GetCells);
 			app.MapGet("/getUserInfo", WorldMapManager.GetPlayerInfo);
+			app.MapPost("/sendArmyData", WorldMapManager.SendArmy);
+			app.MapPost("/restartMap", WorldMapManager.RestartMap);
 
 			app.UseRouting();
 

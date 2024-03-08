@@ -1,53 +1,10 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
-// Write your JavaScript code.
-//let x = 0;
-//let y = 0;
-//let key = [];
-
-//window.addEventListener("keypress", function (event) {
-//    //if (event.defaultPrevented) {
-//    //    return; // Do nothing if the event was already processed
-//    //}
-//    //this.alert(event.key);
-//    switch (event.key) {
-//        case "s":
-//            y += 1;
-//            break;
-//        case "w":
-//            y -= 1;
-//            break;
-//        case "a":
-//            x -= 1;
-//            break;
-//        case "d":
-//            x += 1;
-//            break;
-//        default:
-//            return; // Quit when this doesn't handle the key event.
-//    }
-
-//    // Cancel the default action to avoid it being handled twice
-//    //event.preventDefault();
-//}, true);
-
-//function loop() {
-//    let mes = "";
-//    let l = key.length;
-//    for (let i = 0; i < l; i++) {
-//        if (key[i]) {
-//            mes += i.toString();
-//        }
-//    }
-
-//    if (l != 0)
-//        console.log(mes);
-//    setTimeout(loop, 1000 / 24);
-//}
 
 const canvas = document.getElementById("canvas");
-const context = canvas.getContext("2d");
+var currentTileId = "";
+var sendArmyCount = "ALL";
 
 let key = [];
 window.addEventListener("keydown", function (e) {
@@ -56,19 +13,6 @@ window.addEventListener("keydown", function (e) {
 window.addEventListener("keyup", function (e) {
 	key.splice(key.indexOf(e.keyCode), 1);
 });
-
-//let gameWidth = window.innerWidth
-//let gameHeight = window.innerHeight
-//let ratio = 1.5
-//if (gameHeight / gameWidth < ratio) {
-//	gameWidth = Math.ceil(gameHeight / ratio)
-//}
-//$('.content').css({ "height": gameHeight + "px", "width": gameWidth + "px" })
-//$('.js-modal-content').css({ "width": gameWidth + "px" })
-
-//window.addEventListener("keypress", function (event) {
-//	key[e.keyCode] = e.type;
-//});
 
 
 function Controll(key, context)
@@ -98,21 +42,7 @@ function Draw()
 
 		setTimeout(loop, 1000 / 24);
 	})();
-
-	//canvas.onkeydown = canvas.onkeyup = function (e) {
-	//    var e = e || event;
-	//    key[e.keyCode] = e.type == 'keydown';
-	//};
 }
-
-//function drawTimer()
-//{
-//    let timer = setInterval(function () {
-//        draw();
-//        loop();
-//        //console.log("HIO");
-//    }, 20);
-//}
 
 function updateData() {
 	$.ajax({
@@ -122,9 +52,6 @@ function updateData() {
 			// Update the data container with new data
 			$('#data-container').html(data);
 		},
-		error: function (xhr, status, error) {
-			console.error('Error fetching data:', error);
-		}
 	});
 }
 
@@ -136,11 +63,38 @@ function updateCellData() {
 			// Update the data container with new data
 			$('#data-container').html(data);
 		},
-		error: function (xhr, status, error) {
-			console.error('Error fetching data:', error);
-		}
 	});
 }
+
+//function sentArmy(elementMouseIsOverId) {
+//	if (currentTileId != "") {
+//		console.log(elementMouseIsOverId + ":" + currentTileId.id);
+//		$.ajax({
+//			url: '/sendArmyData',
+//			method: 'POST',
+//			data: "AGA" + "sendArmyCount" + elementMouseIsOverId + ":" + currentTileId.id,
+//		});
+
+//		currentTileId = "";
+//	}
+//}
+
+$(window).click(function (e) {
+	let x = e.clientX, y = e.clientY,
+		elementMouseIsOver = document.elementFromPoint(x, y);
+		
+	if (currentTileId.id && elementMouseIsOver.id)
+	{
+		console.log(elementMouseIsOver.id + ":" + currentTileId.id);
+		$.ajax({
+			url: '/sendArmyData',
+			method: 'POST',
+			data: "AGA" + "sendArmyCount" + elementMouseIsOver.id + ":" + currentTileId.id,
+		});
+
+		currentTileId = "";
+	}
+});
 
 updateData();
 

@@ -72,6 +72,7 @@ namespace HexStrategyInRazor.Map
 				defenceCount = defenceCount,
 				unitsCount = unitsCount,
 				positionId = ID,
+				controllerId = controller?.PlayerId,
 			};
 		}
 	}

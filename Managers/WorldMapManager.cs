@@ -1,5 +1,6 @@
 ﻿using HexStrategyInRazor.Generator;
 using HexStrategyInRazor.Map;
+using System.Text;
 using System.Text.Json;
 
 namespace HexStrategyInRazor.Managers
@@ -52,6 +53,32 @@ namespace HexStrategyInRazor.Managers
 			}
 
 			return JsonSerializer.Serialize(player.ToData());
+		}
+
+		public static async Task SendArmy(HttpContext context)
+		{
+			var req = context.Request;
+			string bodyStr;
+
+			using (StreamReader reader
+				  = new StreamReader(req.Body, Encoding.UTF8, true, 1024, true))
+			{
+				bodyStr = await reader.ReadToEndAsync();
+			}
+
+
+			Console.WriteLine(bodyStr);
+		}
+
+		internal static async Task RestartMap(HttpContext context)
+		{
+			//TODO what if dude deleted cookies?
+			string? userId = context.Request.Cookies[Program.userIdCookieName];
+
+			if (string.IsNullOrEmpty(userId))
+			{
+				return;
+			}
 		}
 	}
 }

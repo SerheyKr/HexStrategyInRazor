@@ -46,16 +46,19 @@ background-image: url(@region.ImagePath);" ; onmousedown="console.log('@i')">
 			@for (int j = 0; j < row.Cells.Count(); j++)
 			{
 				var cell = row.Cells[j];
-				<div class="hexBlock" id="cell-@cell.Position.X-@cell.Position.Y">
+				<div class="hexBlock">
 					<style>
-						@("." + cell.ID)
+						@("." + @cell.ID)
 						{
 							/* background-color: @cell.CellColorHTML; */
 						}
 					</style>
-					<div class="hexagon2 @cell.ID" onclick="console.log('Cell X:@cell.Position.X Y:@cell.Position.Y')">
-						@* U:@cell.unitsCount B:@cell.buildingsCount D:@cell.defenceCount <br />
-						C: @cell.ControllerName *@
+					<div class="unselectable hexagon2 @cell.ID" id="@cell.ID" 
+					onclick="" 
+					onmousedown = "console.log(@cell.ID); currentTileId = @cell.ID"
+					@* onmouseup = "sentArmy(@cell.ID)" *@>
+						U:@cell.unitsCount B:@cell.buildingsCount D:@cell.defenceCount <br />
+						C: @cell.ControllerName <br />
 						X:@cell.Position.X Y:@cell.Position.Y
 					</div>
 					@* U:@cell.unitsCount B:@cell.buildingsCount D:@cell.defenceCount *@
