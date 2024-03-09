@@ -1,6 +1,6 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
-import { jsonIgnore } from "ts-serializable";
+
 
 const canvas = document.getElementById("canvas");
 var currentTileId = "";
@@ -55,26 +55,35 @@ function updateData() {
 	});
 }
 
-function updateMapData() {
+function updateCellData() {
 	$.ajax({
 		url: '/getMapData', // URL to your server endpoint to fetch data
 		method: 'GET',
-		success: function (data) {
-			let json = JSON.stringify(data);
+		success: function (json) {
+			let data = eval(JSON.parse(json));
+			console.log(data);
 
-			let map = new WorldMapData().fromJSON(json);
-			console.log(map);
+			data.Rows.forEach((element) => {
+				element.Cells.forEach((cell) => {
+					$(`#${cell.positionId}`).html(`U:${cell.unitsCount} B:${cell.buildingsCount} D:${cell.defenceCount}<br />C:${cell.controllerName}`);
+				});
+			});
 		},
 	});
 }
 
-function restartMap() {
-	console.log("Map is restarting...");
-	$.ajax({
-		url: '/restartMap',
-		method: 'POST',
-	});
-}
+//function sentArmy(elementMouseIsOverId) {
+//	if (currentTileId != "") {
+//		console.log(elementMouseIsOverId + ":" + currentTileId.id);
+//		$.ajax({
+//			url: '/sendArmyData',
+//			method: 'POST',
+//			data: "AGA" + "sendArmyCount" + elementMouseIsOverId + ":" + currentTileId.id,
+//		});
+
+//		currentTileId = "";
+//	}
+//}
 
 $(window).click(function (e) {
 	let x = e.clientX, y = e.clientY,
@@ -94,6 +103,7 @@ $(window).click(function (e) {
 });
 
 updateData();
+updateCellData();
 
 setInterval(updateData, 1000); // 5000 milliseconds = 5 seconds
-/*setInterval(updateMapData, 1000); // 5000 milliseconds = 5 seconds*/
+setInterval(updateCellData, 1000); // 5000 milliseconds = 5 seconds

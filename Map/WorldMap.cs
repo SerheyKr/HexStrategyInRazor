@@ -144,6 +144,6 @@ namespace HexStrategyInRazor.Map
 		public int buildingsCount { get; set; }
 		public int defenceCount { get; set; }
 		public string positionId{ get; set; }
-		public string controllerId { get; set; }
+		public string controllerName { get; set; }
 	}
 }
