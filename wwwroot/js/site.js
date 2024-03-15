@@ -55,6 +55,16 @@ function updateData() {
 	});
 }
 
+function RestartMap()
+{
+	$.ajax({
+		url: '/restartMap',
+		method: 'POST',
+	});
+
+	updateCellData();
+}
+
 function updateCellData() {
 	$.ajax({
 		url: '/getMapData', // URL to your server endpoint to fetch data
@@ -65,25 +75,36 @@ function updateCellData() {
 
 			data.Rows.forEach((element) => {
 				element.Cells.forEach((cell) => {
-					$(`#${cell.positionId}`).html(`U:${cell.unitsCount} B:${cell.buildingsCount} D:${cell.defenceCount}<br />C:${cell.controllerName}`);
+					$(`#${cell.positionId}`).html(`U:${cell.unitsCount} <br />C:${cell.controllerName}`);
 				});
 			});
 		},
 	});
 }
 
-//function sentArmy(elementMouseIsOverId) {
-//	if (currentTileId != "") {
-//		console.log(elementMouseIsOverId + ":" + currentTileId.id);
-//		$.ajax({
-//			url: '/sendArmyData',
-//			method: 'POST',
-//			data: "AGA" + "sendArmyCount" + elementMouseIsOverId + ":" + currentTileId.id,
-//		});
+function updateUserData() {
+	$.ajax({
+		url: '/getUserData', // URL to your server endpoint to fetch data
+		method: 'GET',
+		success: function (json) {
+			let data = eval(JSON.parse(json));
+			/*$('#Monies').html("Current monies: " + data.Monies);*/
+			$('#TotalArmy').html("Total army: " + data.TotalArmy);
+			/*$('#TotalBuildings').html("Total buildings: " + data.TotalBuildings);*/
+		},
+	});
+}
 
-//		currentTileId = "";
-//	}
-//}
+function sendArmyMoveData(FromId, ToId, Count)
+{
+	const dataToSend = JSON.stringify({ "FromId": FromId, "ToId": ToId, "ArmyCount": Count });
+
+	$.ajax({
+		url: '/sendArmyData',
+		method: 'POST',
+		data: dataToSend,
+	});
+}
 
 $(window).click(function (e) {
 	let x = e.clientX, y = e.clientY,
@@ -91,19 +112,16 @@ $(window).click(function (e) {
 		
 	if (currentTileId.id && elementMouseIsOver.id)
 	{
-		console.log(elementMouseIsOver.id + ":" + currentTileId.id);
-		$.ajax({
-			url: '/sendArmyData',
-			method: 'POST',
-			data: "AGA" + "sendArmyCount" + elementMouseIsOver.id + ":" + currentTileId.id,
-		});
+		let armyCount = 1;
+		console.log(currentTileId.id + "->" + elementMouseIsOver.id + "(" + armyCount + ")");
+		sendArmyMoveData(currentTileId.id, elementMouseIsOver.id, armyCount);
 
 		currentTileId = "";
 	}
 });
 
-updateData();
 updateCellData();
+updateUserData();
 
-setInterval(updateData, 1000); // 5000 milliseconds = 5 seconds
-setInterval(updateCellData, 1000); // 5000 milliseconds = 5 seconds
+setInterval(updateCellData, 1000); // 1000 milliseconds = 1 seconds
+setInterval(updateUserData, 5000); // 5000 milliseconds = 5 seconds

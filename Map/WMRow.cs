@@ -1,6 +1,8 @@
-﻿namespace HexStrategyInRazor.Map
+﻿using HexStrategyInRazor.Map.Data;
+
+namespace HexStrategyInRazor.Map
 {
-	public class WMRow
+    public class WMRow
 	{
 		public List<WMCell> Cells = new List<WMCell>();
 

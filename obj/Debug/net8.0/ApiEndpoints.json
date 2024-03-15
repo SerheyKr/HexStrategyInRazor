@@ -48,7 +48,7 @@
   },
   {
     "ContainingType": "HexStrategyInRazor.Managers.WorldMapManager",
-    "Method": "GetCells",
+    "Method": "GetMapData",
     "RelativePath": "getMapData",
     "HttpMethod": "GET",
     "IsController": false,
@@ -67,7 +67,7 @@
   {
     "ContainingType": "HexStrategyInRazor.Managers.WorldMapManager",
     "Method": "GetPlayerInfo",
-    "RelativePath": "getUserInfo",
+    "RelativePath": "getUserData",
     "HttpMethod": "GET",
     "IsController": false,
     "Order": 0,

@@ -11,6 +11,7 @@ namespace HexStrategyInRazor.Generator
 		public string PlayerName;
 		public int Monies;
 		public BrowserUser User;
+		public WorldMap CurrentMap;
 		public bool IsMainPlayer = false;
 		public string PlayerId;
 
@@ -36,7 +37,9 @@ namespace HexStrategyInRazor.Generator
 		{
 			return new PlayerData
 			{ 
-				Monies = Monies 
+				Monies = Monies,
+				TotalArmy = 0,
+				TotalBuildings = 0,
 			};
 		}
 	}
@@ -44,5 +47,7 @@ namespace HexStrategyInRazor.Generator
 	public class PlayerData
 	{
 		public int Monies { get; set; }
+		public int TotalArmy { get; set; }
+		public int TotalBuildings { get; set; }
 	}
 }

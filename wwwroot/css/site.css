@@ -2,8 +2,9 @@ html {
 	font-size: 14px;
 	position: relative;
 	min-height: 100%;
-	--hex-space: 2px;
+	--hex-space: 4px;
 	--ratio: 0.4;
+	--hex-extra-space: 200px;
 }
 
 @media (min-width: 768px) {
@@ -17,10 +18,10 @@ html {
 body {
 	white-space: nowrap;
 	margin-bottom: 60px;
-	--hexWidthInCol: calc(230px* var(--ratio));
-	--hexHeightInCol: calc(200px* var(--ratio));
-	--hexWidthInRow: calc(200px* var(--ratio));
-	--hexHeightInRow: calc(230px* var(--ratio));
+	--hexWidthInCol: calc(var(--hex-extra-space) * var(--ratio));
+	--hexHeightInCol: calc(var(--hex-extra-space) * var(--ratio));
+	--hexWidthInRow: calc(var(--hex-extra-space) * var(--ratio));
+	--hexHeightInRow: calc(var(--hex-extra-space) * var(--ratio));
 	--hex-border: calc(6px* var(--ratio));
 	--hexWidthInSquare: calc(172.5px* var(--ratio));
 }
@@ -137,4 +138,33 @@ body {
 		border-top: 15px solid #3498db;
 	}
 
+.slider {
+	-webkit-appearance: none;
+	position: absolute;
+	width: 60%;
+	height: 15px;
+	border-radius: 5px;
+	background: #d3d3d3;
+	outline: none;
+	opacity: 0.7;
+	-webkit-transition: .2s;
+	transition: opacity .2s;
+}
 
+	.slider::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		appearance: none;
+		width: 25px;
+		height: 25px;
+		border-radius: 50%;
+		background: #04AA6D;
+		cursor: pointer;
+	}
+
+	.slider::-moz-range-thumb {
+		width: 25px;
+		height: 25px;
+		border-radius: 50%;
+		background: #04AA6D;
+		cursor: pointer;
+	}

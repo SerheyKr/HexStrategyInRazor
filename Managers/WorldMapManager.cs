@@ -10,7 +10,7 @@ namespace HexStrategyInRazor.Managers
 		//TODO connect with DB
 		public static List<WorldMap> WorldMaps = new List<WorldMap>();
 
-		public static string GetCells(HttpContext context)
+		public static string GetMapData(HttpContext context)
 		{
 			//TODO what if dude deleted cookies?
 			string? userId = context.Request.Cookies[Program.userIdCookieName];
@@ -56,8 +56,28 @@ namespace HexStrategyInRazor.Managers
 		}
 
 		public static async Task SendArmy(HttpContext context)
-		{
-			var req = context.Request;
+        {
+            string? userId = context.Request.Cookies[Program.userIdCookieName];
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return;
+            }
+
+            WorldMap? wm = WorldMaps.Find(x => x.HostId == userId);
+            if (wm == null)
+            {
+                return;
+            }
+
+            Player? player = wm.Players.Find(x => x.User.UserId == userId);
+
+			if (player == null)
+			{
+				return;
+			}
+
+            var req = context.Request;
 			string bodyStr;
 
 			using (StreamReader reader
@@ -67,8 +87,9 @@ namespace HexStrategyInRazor.Managers
 			}
 
 
-			Console.WriteLine(bodyStr);
-		}
+			var moveData = JsonSerializer.Deserialize<UnitMoveData>(bodyStr);
+            wm.CreateMovement(player, moveData);
+        }
 
 		internal static async Task RestartMap(HttpContext context)
 		{
@@ -88,5 +109,12 @@ namespace HexStrategyInRazor.Managers
 
 			wm.Restart();
 		}
+	}
+
+	public class UnitMoveData()
+	{
+		public string FromId { get; set; }
+		public string ToId { get; set; }
+		public int ArmyCount {  get; set; }
 	}
 }

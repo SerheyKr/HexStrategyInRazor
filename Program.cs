@@ -40,6 +40,19 @@ namespace HexStrategyInRazor
 
 			context.SaveChanges();
 
+
+			Console.WriteLine("BLYA");
+			Task.Factory.StartNew(async () =>
+			{
+                while (true)
+				{
+					await Task.Delay(500);
+					Parallel.ForEach(WorldMapManager.WorldMaps, (x) =>
+					{
+						x.Tick();
+					});
+                }
+            });
 			application = SetUpWebApplication(configuration);
 		}
 
@@ -92,8 +105,8 @@ namespace HexStrategyInRazor
 
 			app.MapGet("/getData", (HttpContext context) => $"{GetTime()}: COOKIES DUDE: {context.Request.Cookies[userIdCookieName]}");
 			app.MapGet("/getCellData", (int xCoords, int yCoords) => $"Coords - {xCoords} : {yCoords}");
-			app.MapGet("/getMapData", WorldMapManager.GetCells);
-			app.MapGet("/getUserInfo", WorldMapManager.GetPlayerInfo);
+			app.MapGet("/getMapData", WorldMapManager.GetMapData);
+			app.MapGet("/getUserData", WorldMapManager.GetPlayerInfo);
 			app.MapPost("/sendArmyData", WorldMapManager.SendArmy);
 			app.MapPost("/restartMap", WorldMapManager.RestartMap);
 

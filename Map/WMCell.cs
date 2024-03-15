@@ -1,23 +1,33 @@
 ﻿using HexStrategyInRazor.Generator;
+using HexStrategyInRazor.Map.Data;
 using Svg;
 using System.Drawing;
 using System.Numerics;
 
 namespace HexStrategyInRazor.Map
 {
-	public class WMCell
+    public class WMCell
 	{
 		public SvgDocument Image;
 		public string ImagePath;
-		public int unitsCount = 0;
-		public int buildingsCount = 0;
-		public int defenceCount = 0;
-		public Player controller;
-		private readonly Color emptyColor = Color.FromArgb(120, 0, 0, 0);
+		public int? unitsCount => (MapReference.Units.Find(x => x.currentCell == this)?.UnitsCount);
+		public Player Controller;
+		private readonly Color emptyColor = Color.FromArgb(0, 255, 255, 255);
 		private Vector2 position;
-		public List<WMCell> neighbors = new();
+		public List<WMCell> Neighbors = new();
+		public WorldMap MapReference;
 
-		public string ID
+        public int GCost;
+        public int FCost;
+        public int HCost;
+        public WMCell CameFrom;
+
+        public void CalculateFCost()
+        {
+            FCost = GCost + HCost;
+        }
+
+        public string ID
 		{
 			get
 			{
@@ -29,10 +39,10 @@ namespace HexStrategyInRazor.Map
 		{
 			get
 			{
-				if (controller == null)
+				if (Controller == null)
 					return Color.FromArgb(120, 0, 0, 0);
 
-				return controller.PlayerColor;
+				return Controller.PlayerColor;
 			}
 		}
 
@@ -40,10 +50,10 @@ namespace HexStrategyInRazor.Map
 		{
 			get
 			{
-				if (controller == null)
+				if (Controller == null)
 					return "None";
 
-				return controller.PlayerName;
+				return Controller.PlayerName;
 			}
 		}
 
@@ -51,30 +61,28 @@ namespace HexStrategyInRazor.Map
 		{
 			get
 			{
-				if (controller == null)
+				if (Controller == null)
 					return ColorTranslator.ToHtml(emptyColor);
-				return ColorTranslator.ToHtml(controller.PlayerColor);
+				return ColorTranslator.ToHtml(Controller.PlayerColor);
 			}
 		}
 
 		public Vector2 Position { get => position; }
 
-		public WMCell(Vector2 position)
+		public WMCell(Vector2 position, WorldMap mapReference)
 		{
 			this.position = position;
-		}
+			MapReference = mapReference;
+        }
 
 		public WMCellData ToData()
 		{
 			return new WMCellData()
 			{
-				buildingsCount = buildingsCount,
-				defenceCount = defenceCount,
-				unitsCount = unitsCount,
+				unitsCount = unitsCount ?? 0,
 				positionId = ID,
-				//controllerId = controller?.PlayerId,
-				controllerName = controller == null ? "N" : controller.PlayerName,
+				controllerName = Controller == null ? "N" : Controller.PlayerName,
 			};
 		}
-	}
+    }
 }

@@ -32,12 +32,16 @@ background-image: url(@region.ImagePath);" ; onmousedown="console.log('@i')">
 @* <map id="@i" name="@i">
 	<area alt="" coords="140, 150, 140"  href=""  shape="circle" />
 	</map> *@
-<div id="data-container">
+@* <div id="data-container">
 	DATA
 </div>
 <div id="Monies">
 	Currnet monies: @Model.currentPlayer.Monies
+</div> *@
+<div class="slidecontainer">
+  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
 </div>
+
 <section cite="hexMap">
 	@for (int i = 0; i < Model.newMap.Rows.Count; i++)
 	{
@@ -57,7 +61,7 @@ background-image: url(@region.ImagePath);" ; onmousedown="console.log('@i')">
 					onclick="" 
 					onmousedown = "console.log(@cell.ID); currentTileId = @cell.ID"
 					@* onmouseup = "sentArmy(@cell.ID)" *@>
-						U:@cell.unitsCount B:@cell.buildingsCount D:@cell.defenceCount <br />
+						U:@cell.unitsCount<br />
 						C:@cell.ControllerName <br />
 					</div>
 					@* U:@cell.unitsCount B:@cell.buildingsCount D:@cell.defenceCount *@
