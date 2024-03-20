@@ -38,8 +38,7 @@ namespace HexStrategyInRazor.Generator
 			return new PlayerData
 			{ 
 				Monies = Monies,
-				TotalArmy = 0,
-				TotalBuildings = 0,
+				TotalArmy = CurrentMap?.AllUnits.FindAll(x => x.Controller == this).Sum(x => x.UnitsCount) ?? 0,
 			};
 		}
 	}

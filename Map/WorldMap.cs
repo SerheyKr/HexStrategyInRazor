@@ -6,34 +6,33 @@ using System.Numerics;
 
 namespace HexStrategyInRazor.Map
 {
-    public class WorldMap
+	public class WorldMap
 	{
 		private const int MOVE_BASIC_COST = 10;
 
 		public List<WMRow> Rows = new List<WMRow>();
-		public List<WMCell> allCells = new List<WMCell>();
+		public List<WMCell> AllCells = new List<WMCell>();
 		public List<Player> Players = new List<Player>();
-        public List<Army> Units = new List<Army>();
-        public string HostId;
+		public List<Army> AllUnits = new List<Army>();
+		public string HostId;
 		public Vector2 Sizes;
 		public bool WorldSuspended = false;
-		public int TotalTickCount = 0;
+		public int TotalTurnsCount = 0;
+
+		public DateTime Expires;
 
 		private WorldMap()
 		{
+			Expires = DateTime.Now.AddMonths(1);
 			WorldMapManager.WorldMaps.Add(this);
 		}
 
-		private List<WMCell> openList = new List<WMCell>();
-		private List<WMCell> closedList = new List<WMCell>();
-
-		private List<WMCell> FindPath(WMCell startNode, WMCell endNode)
+		private List<WMCell>? FindPath(WMCell startNode, WMCell endNode)
 		{
-			var cellWay = new List<WMCell>();
-			openList = new List<WMCell>() { startNode };
-			closedList = new List<WMCell>();
+			var openList = new List<WMCell>() { startNode };
+			var closedList = new List<WMCell>();
 
-			foreach (var x in allCells)
+			foreach (var x in AllCells)
 			{
 				x.GCost = int.MaxValue;
 				x.CalculateFCost();
@@ -42,34 +41,81 @@ namespace HexStrategyInRazor.Map
 
 			startNode.GCost = 0;
 			startNode.HCost = CalculateDistance(startNode, endNode);
+			startNode.CalculateFCost();
 
-            return cellWay;
+			while (openList.Count > 0)
+			{
+				var currentNode = openList.OrderBy(x => x.FCost).FirstOrDefault();
+
+				if (currentNode == endNode)
+				{
+					return CalculatePath(endNode);
+				}
+
+				openList.Remove(currentNode);
+				closedList.Add(currentNode);
+
+				foreach (var neigbourNode in currentNode.Neighbors)
+				{
+					if (closedList.Contains(neigbourNode))
+					{
+						continue;
+					}
+
+					int tentativeGCost = currentNode.GCost + CalculateDistance(currentNode, neigbourNode);
+
+					if (tentativeGCost < neigbourNode.GCost)
+					{
+						neigbourNode.CameFrom = currentNode;
+						neigbourNode.GCost = tentativeGCost;
+						neigbourNode.HCost = CalculateDistance(neigbourNode, endNode);
+						neigbourNode.CalculateFCost();
+
+						if (!openList.Contains(neigbourNode))
+						{
+							openList.Add(neigbourNode);
+						}
+					}
+				}
+			}
+
+			return null;
+		}
+
+		private List<WMCell> CalculatePath(WMCell endNode)
+		{
+			List<WMCell> path = new List<WMCell>() { endNode };
+			var currentNode = endNode;
+			while (currentNode.CameFrom != null) 
+			{
+				path.Add(currentNode.CameFrom);
+				currentNode = currentNode.CameFrom;
+			}
+
+			path.Reverse();
+			return path;
 		}
 
 		private int CalculateDistance(WMCell a, WMCell b)
 		{
-			int xDistance;
-			int yDistance;
-			int remaining;
+			int xDistance = (int)Math.Abs(a.position.X - b.position.X);
+			int yDistance = (int)Math.Abs(a.position.Y - b.position.Y);
+			int remaining = Math.Abs(xDistance - yDistance);
 
-			return 0;
+			return MOVE_BASIC_COST * remaining;
 		}
 
-		public void Tick()
+		public void CreateMovement(Player player, UnitMoveData moveData)
 		{
-			if (!WorldSuspended)
-            {
-                TotalTickCount++;
-            }
-        }
+			WMCell? startCell = AllCells.Find(x => x.ID == moveData.FromId);
+			WMCell? endCell = AllCells.Find(x => x.ID == moveData.ToId);
 
-        public void CreateMovement(Player player, UnitMoveData moveData)
-		{
-			//TODO mark them with ?
-			WMCell startCell = allCells.Find(x => x.ID == moveData.FromId);
-			WMCell endCell = allCells.Find(x => x.ID == moveData.ToId);
+			if (startCell == null || endCell == null)
+			{
+				return;
+			}
 
-			if (startCell.Controller != player)
+			if (startCell.Controller == null || startCell.Controller != player)
 			{
 				return;
 			}
@@ -79,13 +125,21 @@ namespace HexStrategyInRazor.Map
 				return;
 			}
 
-			var way = FindPath(startCell, endCell);
+            List<WMCell>? way = FindPath(startCell, endCell);
+
+			if (way == null)
+			{
+				return;
+			}
+
+			//startCell.currentUnits;
+			//Units.Add();
 		}
 
 		private void GenerateBasicCells(Vector2 sizes)
 		{
 			Rows.Clear();
-			allCells.Clear();
+			AllCells.Clear();
 			Sizes = sizes;
 
 			for (int i = 0; i < sizes.X; i++)
@@ -96,7 +150,7 @@ namespace HexStrategyInRazor.Map
 				{
 					var nc = new WMCell(new Vector2(i, j), this);
 					nr.Cells.Add(nc);
-					allCells.Add(nc);
+					AllCells.Add(nc);
 				}
 			}
 		}
@@ -155,13 +209,7 @@ namespace HexStrategyInRazor.Map
 				} while (randomCell.Controller != null);
 
 				randomCell.Controller = np;
-				Units.Add(new Army()
-				{
-					currentCell = randomCell,
-					Controller = np,
-					UnitsCount = 5,
-					moves = false,
-				});
+				randomCell.ChangeUnitsCount(5);
 				np.CurrentMap = this;
 			}
 		}
@@ -173,6 +221,7 @@ namespace HexStrategyInRazor.Map
 			map.PlacePlayers(players);
 			map.SetNeighbors();
 
+			//TODO what if none of players is main?
 			map.HostId = players.Find(x => x.IsMainPlayer).User.UserId;
 
 			return map;
@@ -185,15 +234,23 @@ namespace HexStrategyInRazor.Map
 			return new WorldMapData()
 			{
 				Rows = x,
-				TotalTicks = TotalTickCount
+				TotalTicks = TotalTurnsCount
 			};
 		}
 
 		public void Restart()
-		{
-			GenerateBasicCells(Sizes);
+        {
+            AllUnits.Clear();
+            GenerateBasicCells(Sizes);
 			PlacePlayers(Players);
 			SetNeighbors();
 		}
-	}
+
+        public void EndTurn()
+        {
+            TotalTurnsCount++;
+			AllCells.ForEach(cell => cell.EndTurn());
+			AllUnits.ForEach(unit => unit.DoMove());
+        }
+    }
 }

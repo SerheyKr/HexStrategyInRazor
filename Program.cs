@@ -39,27 +39,13 @@ namespace HexStrategyInRazor
 			//context.UsersRepository.Add(new User() { Id = 0, UserName = "Admin", Password = "123", Email = "7366723@stud.nau.edu.ua" });
 
 			context.SaveChanges();
-
-
-			Console.WriteLine("BLYA");
-			Task.Factory.StartNew(async () =>
-			{
-                while (true)
-				{
-					await Task.Delay(500);
-					Parallel.ForEach(WorldMapManager.WorldMaps, (x) =>
-					{
-						x.Tick();
-					});
-                }
-            });
-			application = SetUpWebApplication(configuration);
+			application = SetUpWebApplication();
 		}
 
 		private static WadbContext SetUpDb(IConfigurationRoot configuration)
 		{
 			var options = new DbContextOptionsBuilder<WadbContext>();
-			WadbContext cont = new(options.Options, configuration.GetConnectionString("connectionPath"));
+			WadbContext cont = new(options.Options, connectionString: configuration.GetConnectionString("connectionPath"));
 			cont.Database.EnsureDeleted();
 			if (cont.Database.EnsureCreated())
 			{
@@ -69,8 +55,8 @@ namespace HexStrategyInRazor
 			return cont;
 		}
 
-		private static WebApplication SetUpWebApplication(IConfigurationRoot configuration) 
-		{
+		private static WebApplication SetUpWebApplication()
+        {
 			WebApplicationBuilder builder = WebApplication.CreateBuilder();
 
 			// Add services to the container.
@@ -109,6 +95,7 @@ namespace HexStrategyInRazor
 			app.MapGet("/getUserData", WorldMapManager.GetPlayerInfo);
 			app.MapPost("/sendArmyData", WorldMapManager.SendArmy);
 			app.MapPost("/restartMap", WorldMapManager.RestartMap);
+			app.MapPost("/endTurn", WorldMapManager.EndTurn);
 
 			app.UseRouting();
 

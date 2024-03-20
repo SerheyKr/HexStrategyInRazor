@@ -62,7 +62,17 @@ function RestartMap()
 		method: 'POST',
 	});
 
-	updateCellData();
+	updateAllData();
+}
+
+function EndTurn()
+{
+	$.ajax({
+		url: '/endTurn',
+		method: 'POST',
+	});
+
+	updateAllData();
 }
 
 function updateCellData() {
@@ -120,8 +130,12 @@ $(window).click(function (e) {
 	}
 });
 
-updateCellData();
-updateUserData();
+function updateAllData()
+{
+	updateCellData();
+	updateUserData();
+}
 
-setInterval(updateCellData, 1000); // 1000 milliseconds = 1 seconds
-setInterval(updateUserData, 5000); // 5000 milliseconds = 5 seconds
+updateAllData();
+
+setInterval(updateAllData, 1000); // 5000 milliseconds = 5 seconds

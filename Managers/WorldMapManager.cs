@@ -91,7 +91,25 @@ namespace HexStrategyInRazor.Managers
             wm.CreateMovement(player, moveData);
         }
 
-		internal static async Task RestartMap(HttpContext context)
+        internal static async Task EndTurn(HttpContext context)
+        {
+            string? userId = context.Request.Cookies[Program.userIdCookieName];
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return;
+            }
+
+            WorldMap? wm = WorldMaps.Find(x => x.HostId == userId);
+            if (wm == null)
+            {
+                return;
+            }
+
+            wm.EndTurn();
+        }
+
+        internal static async Task RestartMap(HttpContext context)
 		{
 			//TODO what if dude deleted cookies?
 			string? userId = context.Request.Cookies[Program.userIdCookieName];

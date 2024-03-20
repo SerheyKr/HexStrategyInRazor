@@ -6,28 +6,86 @@ using System.Numerics;
 
 namespace HexStrategyInRazor.Map
 {
-    public class WMCell
+	public class WMCell
 	{
 		public SvgDocument Image;
 		public string ImagePath;
-		public int? unitsCount => (MapReference.Units.Find(x => x.currentCell == this)?.UnitsCount);
+		public int? unitsCount => MapReference.AllUnits.FindAll(x => x.currentCell == this)?.Sum(x => x.UnitsCount);
+		public Army? currentUnit
+		{
+			get
+			{
+				GroupUnits();
+				return MapReference.AllUnits.Find(x => x.currentCell == this);
+			}
+		}
+
 		public Player Controller;
 		private readonly Color emptyColor = Color.FromArgb(0, 255, 255, 255);
-		private Vector2 position;
+		public Vector2 position;
 		public List<WMCell> Neighbors = new();
 		public WorldMap MapReference;
 
-        public int GCost;
-        public int FCost;
-        public int HCost;
-        public WMCell CameFrom;
+		public int GCost;
+		public int FCost;
+		public int HCost;
+		public WMCell? CameFrom;
 
-        public void CalculateFCost()
-        {
-            FCost = GCost + HCost;
-        }
+		public void ChangeUnitsCount(int count)
+		{
+			if (count > 0)
+			{
+				MapReference.AllUnits.Add(new Army()
+				{
+					currentCell = this,
+					Controller = Controller,
+					UnitsCount = count,
+					moves = false,
+				});
 
-        public string ID
+				GroupUnits();
+			} else
+			{
+				if (currentUnit != null)
+				{
+					currentUnit.UnitsCount -= count;
+				}
+			}
+		}
+
+		public void GroupUnits()
+		{
+			var currentUnits = MapReference.AllUnits.FindAll(x => x.currentCell == this);
+			List<Army> toGroup = new List<Army>();
+			if (currentUnits.Count > 1)
+			{
+				foreach (var x in currentUnits)
+				{
+					if (!x.moves)
+					{
+						toGroup.Add(x);
+					}
+				}
+			}
+			var groupArmy = currentUnits.FindAll(x => !x.moves)[0];
+			toGroup.Remove(groupArmy);
+
+			foreach (var x in toGroup)
+			{
+				if (groupArmy != null)
+				{
+					groupArmy.UnitsCount += toGroup.Sum(x => x.UnitsCount);
+				}
+				MapReference.AllUnits.RemoveAll(x => toGroup.Contains(x));
+			}
+		}
+
+		public void CalculateFCost()
+		{
+			FCost = GCost + HCost;
+		}
+
+		public string ID
 		{
 			get
 			{
@@ -73,7 +131,7 @@ namespace HexStrategyInRazor.Map
 		{
 			this.position = position;
 			MapReference = mapReference;
-        }
+		}
 
 		public WMCellData ToData()
 		{
@@ -84,5 +142,13 @@ namespace HexStrategyInRazor.Map
 				controllerName = Controller == null ? "N" : Controller.PlayerName,
 			};
 		}
-    }
+
+		public void EndTurn()
+		{
+			if (Controller is not null)
+			{
+				ChangeUnitsCount(1);
+			}
+		}
+	}
 }

@@ -29,17 +29,20 @@
                 </button> *@
                 <div class="show navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li>
+                        @* <li>
                             <a class="nav-link text-dark" id="Monies">Current monies: 9999</a>
-                        </li>
+                        </li> *@
                         <li>
                             <a class="nav-link text-dark" id="TotalArmy">Total army: 9999</a>
                         </li>
-                        <li>
+                        @* <li>
                             <a class="nav-link text-dark" id="TotalBuildings">Total buildings: 9999</a>
-                        </li>
+                        </li> *@
                         <li class="unselectable" type="button" onclick="RestartMap();">
                             <a class="nav-link text-dark">Start a new game</a>
+                        </li>
+                        <li class="unselectable" type="button" onclick="EndTurn();">
+                            <a class="nav-link text-dark">End turn</a>
                         </li>
                         @*
                             <li class="nav-item">
