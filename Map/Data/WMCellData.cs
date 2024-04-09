@@ -8,5 +8,7 @@
         public string positionId { get; set; }
         public string controllerName { get; set; }
         public bool inBattle { get; set; }
-    }
+        public string cellColorHTML { get; set; }
+
+	}
 }

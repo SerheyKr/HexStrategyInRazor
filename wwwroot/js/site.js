@@ -6,6 +6,8 @@ const canvas = document.getElementById("canvas");
 var currentTileId = "";
 var sendArmyCount = "ALL";
 
+let isAlerted = false;
+
 let key = [];
 window.addEventListener("keydown", function (e) {
 	key[e.keyCode] = e.keyCode;
@@ -81,13 +83,27 @@ function updateCellData() {
 		method: 'GET',
 		success: function (json) {
 			let data = eval(JSON.parse(json));
-			console.log(data);
-
+			//console.log(data);
 			data.Rows.forEach((element) => {
 				element.Cells.forEach((cell) => {
 					$(`#${cell.positionId}`).html(`U:${cell.unitsCount} <br />C:${cell.controllerName}`);
+					let element = document.getElementById(cell.positionId);
+					element.style.color = cell.cellColorHTML;
 				});
 			});
+			$('#TotalTurns').html("Turns count: " + data.TurnsCount);
+
+			if (data.IsEnded) {
+				if (!isAlerted) {
+					swal(data.EndText);
+					document.getElementById("endTurnButton").style.display = "none";
+				}
+				isAlerted = true;
+			} else
+			{
+				isAlerted = false;
+				document.getElementById("endTurnButton").style.display = "inline-block";
+			}
 		},
 	});
 }
@@ -138,4 +154,4 @@ function updateAllData()
 
 updateAllData();
 
-setInterval(updateAllData, 1000); // 5000 milliseconds = 5 seconds
+setInterval(updateAllData, 500); // 5000 milliseconds = 5 seconds

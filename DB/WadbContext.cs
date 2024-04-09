@@ -17,7 +17,6 @@ namespace HexStrategyInRazor.DB
             }
         }
         private IUserRepository usersRepository;
-        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

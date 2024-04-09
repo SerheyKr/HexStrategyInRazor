@@ -1,89 +1,50 @@
 ﻿using HexStrategyInRazor.Generator;
 using HexStrategyInRazor.Map.Data;
 using Svg;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
 
 namespace HexStrategyInRazor.Map
 {
-	public class WMCell
+	public class WMCell(Vector2 position, WorldMap mapReference)
 	{
-		public SvgDocument Image;
-		public string ImagePath;
-		public int? unitsCount => MapReference.AllUnits.FindAll(x => x.currentCell == this)?.Sum(x => x.UnitsCount);
-		public Army? currentUnit
-		{
-			get
-			{
-				GroupUnits();
-				return MapReference.AllUnits.Find(x => x.currentCell == this);
-			}
-		}
+		public int? UnitsCount = 0;
 
-		public Player Controller;
+		public Player? Controller;
 		private readonly Color emptyColor = Color.FromArgb(0, 255, 255, 255);
-		public Vector2 position;
-		public List<WMCell> Neighbors = new();
-		public WorldMap MapReference;
+		private Vector2 position = position;
+		public Vector2 Position { get => position; }
 
+		public List<WMCell> Neighbors = new ();
+		public List<WMCell> NeighborsSendArmy = new ();
+		//public IEnumerable<WMCell> NeighborsIncomeArmy => MapReference.AllCells.Where(x => x.NeighborsSendArmy.Contains(this));
+		//public IEnumerable<WMCell> NeighborsAllIncomeArmy
+		//{
+		//	get
+		//	{
+		//		return MapReference.AllCells.Where(x => x.NeighborsSendArmy.Contains(this));
+		//	}
+		//}
+
+		//public int Priority => NeighborsIncomeArmy.Count();
+
+		private WorldMap MapReference = mapReference;
+		public bool ControllerChangedAtLastTurn = false;
+
+
+		#region A*
 		public int GCost;
 		public int FCost;
 		public int HCost;
 		public WMCell? CameFrom;
 
-		public void ChangeUnitsCount(int count)
-		{
-			if (count > 0)
-			{
-				MapReference.AllUnits.Add(new Army()
-				{
-					currentCell = this,
-					Controller = Controller,
-					UnitsCount = count,
-					moves = false,
-				});
-
-				GroupUnits();
-			} else
-			{
-				if (currentUnit != null)
-				{
-					currentUnit.UnitsCount -= count;
-				}
-			}
-		}
-
-		public void GroupUnits()
-		{
-			var currentUnits = MapReference.AllUnits.FindAll(x => x.currentCell == this);
-			List<Army> toGroup = new List<Army>();
-			if (currentUnits.Count > 1)
-			{
-				foreach (var x in currentUnits)
-				{
-					if (!x.moves)
-					{
-						toGroup.Add(x);
-					}
-				}
-			}
-			var groupArmy = currentUnits.FindAll(x => !x.moves)[0];
-			toGroup.Remove(groupArmy);
-
-			foreach (var x in toGroup)
-			{
-				if (groupArmy != null)
-				{
-					groupArmy.UnitsCount += toGroup.Sum(x => x.UnitsCount);
-				}
-				MapReference.AllUnits.RemoveAll(x => toGroup.Contains(x));
-			}
-		}
-
 		public void CalculateFCost()
 		{
 			FCost = GCost + HCost;
 		}
+
+		#endregion
 
 		public string ID
 		{
@@ -125,29 +86,106 @@ namespace HexStrategyInRazor.Map
 			}
 		}
 
-		public Vector2 Position { get => position; }
-
-		public WMCell(Vector2 position, WorldMap mapReference)
-		{
-			this.position = position;
-			MapReference = mapReference;
-		}
-
 		public WMCellData ToData()
 		{
 			return new WMCellData()
 			{
-				unitsCount = unitsCount ?? 0,
+				unitsCount = UnitsCount ?? 0,
 				positionId = ID,
 				controllerName = Controller == null ? "N" : Controller.PlayerName,
+				cellColorHTML = CellColorHTML,
 			};
+		}
+
+		public void AddUnitsCount(Player side, int unitsCount)
+		{
+			if (side == Controller)
+			{
+				this.UnitsCount += unitsCount;
+
+			} else
+			{
+				if (Controller == null)
+				{
+					this.UnitsCount += (unitsCount - 1);
+					Controller = side;
+					ControllerChangedAtLastTurn = true;
+					NeighborsSendArmy.Clear();
+				} else
+				{
+					if (this.UnitsCount - unitsCount > 0)
+					{
+						this.UnitsCount -= unitsCount;
+					} else if (this.UnitsCount - unitsCount < 0)
+					{
+						this.UnitsCount = unitsCount - this.UnitsCount;
+						Controller = side;
+						ControllerChangedAtLastTurn = true;
+						NeighborsSendArmy.Clear();
+					} else
+					{
+						UnitsCount = 0;
+						Controller = null;
+						ControllerChangedAtLastTurn = true;
+						NeighborsSendArmy.Clear();
+					}
+
+				}
+			}
+		}
+
+		public void EndAfter()
+		{
+			if (Controller is not null)
+			{
+				UnitsCount++;
+			}
 		}
 
 		public void EndTurn()
 		{
-			if (Controller is not null)
+			if (Controller is not null && NeighborsSendArmy.Count > 0)
 			{
-				ChangeUnitsCount(1);
+				int splitCount = UnitsCount.GetValueOrDefault() / NeighborsSendArmy.Count;
+				if (splitCount == 0)
+				{
+					return;
+				}
+
+				foreach (var x in NeighborsSendArmy)
+				{
+					x.AddUnitsCount(Controller, splitCount);
+				}
+
+				UnitsCount = UnitsCount.GetValueOrDefault() % NeighborsSendArmy.Count;
+				int cellIndex = 0;
+
+				for (; UnitsCount > 0; UnitsCount--)
+				{
+					NeighborsSendArmy[0].AddUnitsCount(Controller, 1);
+					cellIndex++;
+					if (cellIndex >= NeighborsSendArmy.Count)
+					{
+						cellIndex = 0;
+					}
+				}
+			}
+			ControllerChangedAtLastTurn = false;
+		}
+
+		public void ClearAllWays()
+		{
+			NeighborsSendArmy.Clear();
+		}
+
+		public void AddNeighborsSendArmy(WMCell endCell)
+		{
+			if (NeighborsSendArmy.Contains(endCell))
+			{
+				NeighborsSendArmy.Remove(endCell);
+			} else
+			{
+				NeighborsSendArmy.Add(endCell);
 			}
 		}
 	}

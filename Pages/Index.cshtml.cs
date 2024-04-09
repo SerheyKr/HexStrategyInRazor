@@ -4,6 +4,7 @@ using System.Drawing;
 using HexStrategyInRazor.Generator;
 using HexStrategyInRazor.Map;
 using HexStrategyInRazor.Managers;
+using HexStrategyInRazor.Map.DB;
 
 namespace HexStrategyInRazor.Pages
 {
@@ -24,12 +25,14 @@ namespace HexStrategyInRazor.Pages
 
 			if (string.IsNullOrEmpty(userId))
 			{
-				userId = Guid.NewGuid().ToString();
-				Response.Cookies.Append(Program.userIdCookieName, userId, Program.cookieOptions);
+				Response.Cookies.Append(Program.userIdCookieName, Encryption.Encrypt(Guid.NewGuid().ToString()), Program.cookieOptions);
 				PlayerManager.AllUsers.Add(new BrowserUser()
 				{
 					UserId = userId
 				});
+			} else
+			{
+				userId = Encryption.Decrypt(userId);
 			}
 
 			var user = PlayerManager.AllUsers.Find(x => x.UserId == userId);
@@ -44,7 +47,7 @@ namespace HexStrategyInRazor.Pages
 				var players = new List<Player>()
 				{
 					currentPlayer,
-					new (Color.Red, "E")
+					new AI(Color.Red, "E")
 				};
 
 				newMap = WorldMap.CreateMap(new System.Numerics.Vector2(4, 8), players);

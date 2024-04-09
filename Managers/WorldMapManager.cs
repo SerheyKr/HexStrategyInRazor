@@ -1,11 +1,12 @@
 ﻿using HexStrategyInRazor.Generator;
 using HexStrategyInRazor.Map;
+using HexStrategyInRazor.Map.DB;
 using System.Text;
 using System.Text.Json;
 
 namespace HexStrategyInRazor.Managers
 {
-	public class WorldMapManager
+    public class WorldMapManager
 	{
 		//TODO connect with DB
 		public static List<WorldMap> WorldMaps = new List<WorldMap>();
@@ -13,7 +14,7 @@ namespace HexStrategyInRazor.Managers
 		public static string GetMapData(HttpContext context)
 		{
 			//TODO what if dude deleted cookies?
-			string? userId = context.Request.Cookies[Program.userIdCookieName];
+			string? userId = Encryption.Decrypt(context.Request.Cookies[Program.userIdCookieName]);
 
 			if (string.IsNullOrEmpty(userId))
 			{
@@ -32,9 +33,9 @@ namespace HexStrategyInRazor.Managers
 		public static string GetPlayerInfo(HttpContext context)
 		{
 			//TODO what if dude deleted cookies?
-			string? userId = context.Request.Cookies[Program.userIdCookieName];
+			string? userId = Encryption.Decrypt(context.Request.Cookies[Program.userIdCookieName]);
 
-			if (string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
 			{
 				return "WE ALL DOOMED COOKIES";
 			}
@@ -57,7 +58,7 @@ namespace HexStrategyInRazor.Managers
 
 		public static async Task SendArmy(HttpContext context)
         {
-            string? userId = context.Request.Cookies[Program.userIdCookieName];
+            string? userId = Encryption.Decrypt(context.Request.Cookies[Program.userIdCookieName]);
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -93,7 +94,7 @@ namespace HexStrategyInRazor.Managers
 
         internal static async Task EndTurn(HttpContext context)
         {
-            string? userId = context.Request.Cookies[Program.userIdCookieName];
+            string? userId = Encryption.Decrypt(context.Request.Cookies[Program.userIdCookieName]);
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -112,9 +113,9 @@ namespace HexStrategyInRazor.Managers
         internal static async Task RestartMap(HttpContext context)
 		{
 			//TODO what if dude deleted cookies?
-			string? userId = context.Request.Cookies[Program.userIdCookieName];
+			string? userId = Encryption.Decrypt(context.Request.Cookies[Program.userIdCookieName]);
 
-			if (string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
 			{
 				return;
 			}
@@ -127,12 +128,5 @@ namespace HexStrategyInRazor.Managers
 
 			wm.Restart();
 		}
-	}
-
-	public class UnitMoveData()
-	{
-		public string FromId { get; set; }
-		public string ToId { get; set; }
-		public int ArmyCount {  get; set; }
 	}
 }

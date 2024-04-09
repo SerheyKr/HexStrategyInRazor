@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace HexStrategyInRazor.Map.DB
@@ -33,6 +34,10 @@ namespace HexStrategyInRazor.Map.DB
 		public static string Decrypt(string cipherText)
 		{
 			cipherText = cipherText.Replace(" ", "+");
+			if (cipherText.IsNullOrEmpty())
+			{
+				return "";
+			}
 			byte[] cipherBytes = Convert.FromBase64String(cipherText);
 			using (Aes encryptor = Aes.Create())
 			{

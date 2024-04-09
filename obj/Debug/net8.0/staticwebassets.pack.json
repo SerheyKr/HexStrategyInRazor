@@ -13,100 +13,32 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map.gif",
-      "PackagePath": "staticwebassets\\images\\Images\\Map.gif"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map.ora",
-      "PackagePath": "staticwebassets\\images\\Images\\Map.ora"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map.tga",
-      "PackagePath": "staticwebassets\\images\\Images\\Map.tga"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map1\\svgexport-1.svg",
-      "PackagePath": "staticwebassets\\images\\Images\\Map1\\svgexport-1.svg"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\000.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\000.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\001.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\001.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\002.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\002.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\003.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\003.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\004.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\004.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\005.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\005.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\006.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\006.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\007.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\007.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\008.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\008.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\Thumbnails\\thumbnail.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\Thumbnails\\thumbnail.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\data\\000.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\data\\000.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\data\\001.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\data\\001.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\data\\002.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\data\\002.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\data\\003.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\data\\003.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\data\\004.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\data\\004.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\data\\005.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\data\\005.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\data\\006.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\data\\006.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\data\\007.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\data\\007.png"
-    },
-    {
-      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\Images\\Map\\data\\008.png",
-      "PackagePath": "staticwebassets\\images\\Images\\Map\\data\\008.png"
-    },
-    {
       "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\grid.svg",
       "PackagePath": "staticwebassets\\images\\grid.svg"
+    },
+    {
+      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\gridBottom.svg",
+      "PackagePath": "staticwebassets\\images\\gridBottom.svg"
+    },
+    {
+      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\gridLeftBottom.svg",
+      "PackagePath": "staticwebassets\\images\\gridLeftBottom.svg"
+    },
+    {
+      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\gridRightBottom.svg",
+      "PackagePath": "staticwebassets\\images\\gridRightBottom.svg"
+    },
+    {
+      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\gridTop.svg",
+      "PackagePath": "staticwebassets\\images\\gridTop.svg"
+    },
+    {
+      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\gridTopLeft.svg",
+      "PackagePath": "staticwebassets\\images\\gridTopLeft.svg"
+    },
+    {
+      "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\images\\gridTopRight.svg",
+      "PackagePath": "staticwebassets\\images\\gridTopRight.svg"
     },
     {
       "Id": "G:\\NAU\\TestMethods\\Kursova\\WebApplication1\\HexStrategyInRazor\\wwwroot\\js\\site.js",

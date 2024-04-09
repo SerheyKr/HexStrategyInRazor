@@ -56,7 +56,7 @@ namespace HexStrategyInRazor
 		}
 
 		private static WebApplication SetUpWebApplication()
-        {
+		{
 			WebApplicationBuilder builder = WebApplication.CreateBuilder();
 
 			// Add services to the container.

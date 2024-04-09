@@ -18,6 +18,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <header>
         <nav class="show navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" id="border">
@@ -35,13 +36,16 @@
                         <li>
                             <a class="nav-link text-dark" id="TotalArmy">Total army: 9999</a>
                         </li>
+                        <li>
+                            <a class="nav-link text-dark" id="TotalTurns">Total turns: 9999</a>
+                        </li>
                         @* <li>
                             <a class="nav-link text-dark" id="TotalBuildings">Total buildings: 9999</a>
                         </li> *@
-                        <li class="unselectable" type="button" onclick="RestartMap();">
+                        <li class="unselectable" type="button" onclick="RestartMap();" id="restartButton">
                             <a class="nav-link text-dark">Start a new game</a>
                         </li>
-                        <li class="unselectable" type="button" onclick="EndTurn();">
+                        <li class="unselectable" type="button" onclick="EndTurn();" id="endTurnButton">
                             <a class="nav-link text-dark">End turn</a>
                         </li>
                         @*

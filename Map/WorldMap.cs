@@ -9,17 +9,25 @@ namespace HexStrategyInRazor.Map
 	public class WorldMap
 	{
 		private const int MOVE_BASIC_COST = 10;
+		private const int INITIAL_SEMAPHORE_COUNT = 1;
+		private const int MAXIMUM_SEMAPHORE_COUNT = 1;
 
 		public List<WMRow> Rows = new List<WMRow>();
 		public List<WMCell> AllCells = new List<WMCell>();
 		public List<Player> Players = new List<Player>();
-		public List<Army> AllUnits = new List<Army>();
 		public string HostId;
 		public Vector2 Sizes;
 		public bool WorldSuspended = false;
 		public int TotalTurnsCount = 0;
 
+		public bool IsEnded = false;
+		private Player winSide;
+
+		private readonly Semaphore pool = new(INITIAL_SEMAPHORE_COUNT, MAXIMUM_SEMAPHORE_COUNT);
+
 		public DateTime Expires;
+
+		public Player MainPlayer;
 
 		private WorldMap()
 		{
@@ -27,7 +35,8 @@ namespace HexStrategyInRazor.Map
 			WorldMapManager.WorldMaps.Add(this);
 		}
 
-		private List<WMCell>? FindPath(WMCell startNode, WMCell endNode)
+		#region A*
+		public List<WMCell>? FindPath(WMCell startNode, WMCell endNode)
 		{
 			var openList = new List<WMCell>() { startNode };
 			var closedList = new List<WMCell>();
@@ -98,12 +107,12 @@ namespace HexStrategyInRazor.Map
 
 		private int CalculateDistance(WMCell a, WMCell b)
 		{
-			int xDistance = (int)Math.Abs(a.position.X - b.position.X);
-			int yDistance = (int)Math.Abs(a.position.Y - b.position.Y);
-			int remaining = Math.Abs(xDistance - yDistance);
+			int xDistance = (int)Math.Abs(a.Position.X - b.Position.X);
+			int yDistance = (int)Math.Abs(a.Position.Y - b.Position.Y);
 
-			return MOVE_BASIC_COST * remaining;
+			return (int)(MOVE_BASIC_COST * Math.Sqrt(xDistance * xDistance + yDistance * yDistance));
 		}
+		#endregion
 
 		public void CreateMovement(Player player, UnitMoveData moveData)
 		{
@@ -120,20 +129,21 @@ namespace HexStrategyInRazor.Map
 				return;
 			}
 
-			if (startCell.unitsCount <= 0)
+			if (!startCell.Neighbors.Contains(endCell))
 			{
 				return;
 			}
 
-            List<WMCell>? way = FindPath(startCell, endCell);
-
-			if (way == null)
+			startCell.AddNeighborsSendArmy(endCell);
+		}
+		public void CreateMovement(WMCell startCell, WMCell endCell)
+		{
+			if (!startCell.Neighbors.Contains(endCell))
 			{
 				return;
 			}
 
-			//startCell.currentUnits;
-			//Units.Add();
+			startCell.AddNeighborsSendArmy(endCell);
 		}
 
 		private void GenerateBasicCells(Vector2 sizes)
@@ -169,7 +179,7 @@ namespace HexStrategyInRazor.Map
 					{
 						coordsToCheck = new int[,]
 						{
-							{ +1, 0 }, { +1, -1 }, { 0, -1 },
+							{ +1, 0 }, { -1, -1 }, { 0, -1 },
 							{ -1, 0 }, { -1, +1 }, { 0, +1 }
 						};
 					} else
@@ -177,8 +187,7 @@ namespace HexStrategyInRazor.Map
 						coordsToCheck = new int[,]
 						{
 							{ +1, 0 }, { +1, -1 }, { 0, -1 },
-							{ -1, 0 }, { -1, +1 }, { 0, +1 },
-							{ +1, +1 }, { -1, -1 }
+							{ -1, 0 }, { 0, +1 }, { +1, +1 }
 						};
 					}
 
@@ -189,29 +198,44 @@ namespace HexStrategyInRazor.Map
 
 						if (x >= 0 && y >= 0 &&
 						x < Rows.Count && y < Rows[x].Cells.Count)
+						{
 							nc.Neighbors.Add(Rows[x].Cells[y]);
+						}
 					}
 				}
 			}
 		}
 
+		private void WinCheck()
+		{
+			if (!AllCells.Exists(x => x.Controller == Players[0]))
+			{
+				//You loosed
+				IsEnded = true;
+				winSide = Players[0];
+			} else if (!AllCells.Exists(x => x.Controller == Players[1]))
+			{
+				//Bot loosed
+				IsEnded = true;
+				winSide = Players[1];
+			}
+		}
+
+		private void SetPlayer(Player player, WMCell cell)
+		{
+			cell.Controller = player;
+			cell.UnitsCount = 5;
+			player.CurrentMap = this;
+		}
+
 		private void PlacePlayers(List<Player> players)
 		{
 			Players = players;
+			//We basicly have only 2 players...
+			MainPlayer = players.Find(x => x.IsMainPlayer);
 
-			foreach (var np in Players)
-			{
-				np.PlayerColor = Color.Red;
-				WMCell randomCell;
-				do
-				{
-					randomCell = Rows.PickRandom().Cells.PickRandom();
-				} while (randomCell.Controller != null);
-
-				randomCell.Controller = np;
-				randomCell.ChangeUnitsCount(5);
-				np.CurrentMap = this;
-			}
+			SetPlayer(players[0], Rows[0].Cells[0]);
+			SetPlayer(players[1], Rows[^1].Cells[^1]);
 		}
 
 		public static WorldMap CreateMap(Vector2 sizes, List<Player> players)
@@ -229,28 +253,68 @@ namespace HexStrategyInRazor.Map
 
 		public WorldMapData ToData()
 		{
+			pool.WaitOne();
+
 			List<WMRowData> x = new List<WMRowData>(Rows.Select(x => x.ToData()));
 
+			pool.Release();
 			return new WorldMapData()
 			{
 				Rows = x,
-				TotalTicks = TotalTurnsCount
+				TurnsCount = TotalTurnsCount + 1,
+				IsEnded = IsEnded,
+				EndText = GenerateEndText()
 			};
 		}
 
-		public void Restart()
-        {
-            AllUnits.Clear();
-            GenerateBasicCells(Sizes);
-			PlacePlayers(Players);
-			SetNeighbors();
+		public string GenerateEndText()
+		{
+			string returnText = "No text";
+			if (IsEnded)
+			{
+				if (winSide == Players[0])
+				{
+					returnText = "You loosed to your opponent!\r\n";
+				} else if (winSide == Players[1])
+				{
+					returnText = "You winned your opponent!\r\n";
+				}
+
+				returnText += $"Game taked {TotalTurnsCount + 1} turns!";
+			}
+
+			return returnText;
 		}
 
-        public void EndTurn()
-        {
-            TotalTurnsCount++;
-			AllCells.ForEach(cell => cell.EndTurn());
-			AllUnits.ForEach(unit => unit.DoMove());
-        }
-    }
+		public void Restart()
+		{
+			pool.WaitOne();
+			GenerateBasicCells(Sizes);
+			PlacePlayers(Players);
+			SetNeighbors();
+			pool.Release();
+
+			IsEnded = false;
+			TotalTurnsCount = 0;
+		}
+
+		public void EndTurn()
+		{
+			if (IsEnded)
+			{
+				return;
+			}
+			TotalTurnsCount++;
+			Players.ForEach(player => player.OnTurnEnd());
+			//AllCells.OrderBy(x => x.Priority).ToList().ForEach(cell => cell.EndTurn());
+
+			do
+			{
+				AllCells.ForEach(cell => cell.EndTurn());
+			} while (AllCells.Exists(cell => cell.UnitsCount > 0 && cell.NeighborsSendArmy.Count != 0));
+
+			AllCells.ForEach(cell => cell.EndAfter());
+			WinCheck();
+		}
+	}
 }

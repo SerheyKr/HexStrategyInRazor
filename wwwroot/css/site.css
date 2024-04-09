@@ -42,10 +42,38 @@ body {
 	margin-left: calc(var(--ratio)* -59px);
 	left: calc(var(--ratio)* 57px);
 }
+/*	.hexBlock:after {
+		background-image: url("../images/gridBottom.svg");
+		background-color: rgba(0,0,1,1);
+	}*/
 
 	.hexBlock:nth-child(2n) {
 		top: calc(var(--hexHeightInCol)/2);
 	}
+
+	.hexBlock:hover {
+		top: -4px;
+	}
+
+	.hexBlock:nth-child(2n):hover {
+		top: calc(var(--hexHeightInCol)/2 - 4px);
+	}
+canvas {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1; /* Move the canvas behind other elements */
+	background-color: black; /* Fallback background color */
+
+	--hexWidthInCol: calc(var(--hex-extra-space) * var(--ratio));
+	--hexHeightInCol: calc(var(--hex-extra-space) * var(--ratio));
+	--hexWidthInRow: calc(var(--hex-extra-space) * var(--ratio));
+	--hexHeightInRow: calc(var(--hex-extra-space) * var(--ratio));
+	--hex-border: calc(6px* var(--ratio));
+	--hexWidthInSquare: calc(172.5px* var(--ratio));
+}
 
 .unselectable {
 	-webkit-touch-callout: none;
