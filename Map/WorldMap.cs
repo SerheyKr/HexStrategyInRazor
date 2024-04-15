@@ -134,6 +134,12 @@ namespace HexStrategyInRazor.Map
 				return;
 			}
 
+			if (startCell.Controller == endCell.Controller && startCell.NeighborsInputArmy.ToList().Contains(endCell))
+			{
+				startCell.AddNeighborsSendArmy(endCell);
+				(startCell, endCell) = (endCell, startCell);
+			}
+
 			startCell.AddNeighborsSendArmy(endCell);
 		}
 		public void CreateMovement(WMCell startCell, WMCell endCell)
@@ -248,6 +254,8 @@ namespace HexStrategyInRazor.Map
 			//TODO what if none of players is main?
 			map.HostId = players.Find(x => x.IsMainPlayer).User.UserId;
 
+			players.ForEach(x => x.OnTurnEnd());
+
 			return map;
 		}
 
@@ -292,10 +300,12 @@ namespace HexStrategyInRazor.Map
 			GenerateBasicCells(Sizes);
 			PlacePlayers(Players);
 			SetNeighbors();
-			pool.Release();
 
 			IsEnded = false;
 			TotalTurnsCount = 0;
+
+			Players.ForEach(x => x.OnTurnEnd());
+			pool.Release();
 		}
 
 		public void EndTurn()
@@ -305,15 +315,14 @@ namespace HexStrategyInRazor.Map
 				return;
 			}
 			TotalTurnsCount++;
-			Players.ForEach(player => player.OnTurnEnd());
-			//AllCells.OrderBy(x => x.Priority).ToList().ForEach(cell => cell.EndTurn());
-
+			// TODO Maybe some better way?
 			do
 			{
 				AllCells.ForEach(cell => cell.EndTurn());
 			} while (AllCells.Exists(cell => cell.UnitsCount > 0 && cell.NeighborsSendArmy.Count != 0));
-
 			AllCells.ForEach(cell => cell.EndAfter());
+
+			Players.ForEach(player => player.OnTurnEnd());
 			WinCheck();
 		}
 	}

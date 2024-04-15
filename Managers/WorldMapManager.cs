@@ -1,84 +1,87 @@
 ﻿using HexStrategyInRazor.Generator;
 using HexStrategyInRazor.Map;
 using HexStrategyInRazor.Map.DB;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
 
 namespace HexStrategyInRazor.Managers
 {
-    public class WorldMapManager
+	public static class WorldMapManager
 	{
 		//TODO connect with DB
 		public static List<WorldMap> WorldMaps = new List<WorldMap>();
 
-		public static string GetMapData(HttpContext context)
+		public static ActionResult<string> GetMapData(HttpContext context)
 		{
 			//TODO what if dude deleted cookies?
 			string? userId = Encryption.Decrypt(context.Request.Cookies[Program.userIdCookieName]);
 
 			if (string.IsNullOrEmpty(userId))
 			{
-				return "WE ALL DOOMED COOKIES";
+				return new BadRequestResult();
 			}
 
 			WorldMap? wm = WorldMaps.Find(x => x.HostId == userId);
 			if (wm == null)
 			{
-				return "WE ALL DOOMED MAP";
+				return new BadRequestResult();
 			}
 
 			return JsonSerializer.Serialize(wm.ToData());
 		}
 
-		public static string GetPlayerInfo(HttpContext context)
+		public static ActionResult<string> GetPlayerInfo(HttpContext context)
 		{
 			//TODO what if dude deleted cookies?
 			string? userId = Encryption.Decrypt(context.Request.Cookies[Program.userIdCookieName]);
 
-            if (string.IsNullOrEmpty(userId))
+			if (string.IsNullOrEmpty(userId))
 			{
-				return "WE ALL DOOMED COOKIES";
+				return new BadRequestResult();
 			}
 
 			WorldMap? wm = WorldMaps.Find(x => x.HostId == userId);
 			if (wm == null)
 			{
-				return "WE ALL DOOMED MAP";
+				return new BadRequestResult();
 			}
 
 			Player? player = wm.Players.Find(x => x.User.UserId == userId);
 
 			if (player == null)
 			{
-				return "WE ALL DOOMED PLAYER";
+				return new BadRequestResult();
 			}
 
 			return JsonSerializer.Serialize(player.ToData());
 		}
 
-		public static async Task SendArmy(HttpContext context)
-        {
-            string? userId = Encryption.Decrypt(context.Request.Cookies[Program.userIdCookieName]);
+		public static async Task<ActionResult> SendArmy(HttpContext context)
+		{
+			//TODO what if dude deleted cookies?
+			string? userId = Encryption.Decrypt(context.Request.Cookies[Program.userIdCookieName]);
 
-            if (string.IsNullOrEmpty(userId))
-            {
-                return;
-            }
+			if (string.IsNullOrEmpty(userId))
+			{
+				return new BadRequestResult();
+			}
 
-            WorldMap? wm = WorldMaps.Find(x => x.HostId == userId);
-            if (wm == null)
-            {
-                return;
-            }
+			WorldMap? wm = WorldMaps.Find(x => x.HostId == userId);
+			if (wm == null)
+			{
+				return new BadRequestResult();
+			}
 
-            Player? player = wm.Players.Find(x => x.User.UserId == userId);
+			Player? player = wm.Players.Find(x => x.User.UserId == userId);
 
 			if (player == null)
 			{
-				return;
+				return new BadRequestResult();
 			}
 
-            var req = context.Request;
+			var req = context.Request;
 			string bodyStr;
 
 			using (StreamReader reader
@@ -89,44 +92,50 @@ namespace HexStrategyInRazor.Managers
 
 
 			var moveData = JsonSerializer.Deserialize<UnitMoveData>(bodyStr);
-            wm.CreateMovement(player, moveData);
-        }
+			wm.CreateMovement(player, moveData);
 
-        internal static async Task EndTurn(HttpContext context)
-        {
-            string? userId = Encryption.Decrypt(context.Request.Cookies[Program.userIdCookieName]);
+			return new OkResult();
+		}
 
-            if (string.IsNullOrEmpty(userId))
-            {
-                return;
-            }
-
-            WorldMap? wm = WorldMaps.Find(x => x.HostId == userId);
-            if (wm == null)
-            {
-                return;
-            }
-
-            wm.EndTurn();
-        }
-
-        internal static async Task RestartMap(HttpContext context)
+		internal static async Task<ActionResult> EndTurn(HttpContext context)
 		{
 			//TODO what if dude deleted cookies?
 			string? userId = Encryption.Decrypt(context.Request.Cookies[Program.userIdCookieName]);
 
-            if (string.IsNullOrEmpty(userId))
+			if (string.IsNullOrEmpty(userId))
 			{
-				return;
+				return new BadRequestResult();
 			}
 
 			WorldMap? wm = WorldMaps.Find(x => x.HostId == userId);
 			if (wm == null)
 			{
-				return;
+				return new BadRequestResult();
+			}
+
+			wm.EndTurn();
+			return new OkResult();
+		}
+
+		internal static async Task<ActionResult> RestartMap(HttpContext context)
+		{
+			//TODO what if dude deleted cookies?
+			string? userId = Encryption.Decrypt(context.Request.Cookies[Program.userIdCookieName]);
+
+			if (string.IsNullOrEmpty(userId))
+			{
+				return new BadRequestResult();
+			}
+
+			WorldMap? wm = WorldMaps.Find(x => x.HostId == userId);
+			if (wm == null)
+			{
+				return new BadRequestResult();
 			}
 
 			wm.Restart();
+
+			return new OkResult();
 		}
 	}
 }

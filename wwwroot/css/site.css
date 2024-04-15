@@ -27,10 +27,10 @@ body {
 }
 
 .hexBlock {
-	background-image: url("../images/grid.svg");
 	position: relative;
 	display: inline-flex;
 	align-items: center;
+	z-index: 1;
 	justify-content: center;
 	font-size: initial;
 	background-clip: border-box;
@@ -42,10 +42,6 @@ body {
 	margin-left: calc(var(--ratio)* -59px);
 	left: calc(var(--ratio)* 57px);
 }
-/*	.hexBlock:after {
-		background-image: url("../images/gridBottom.svg");
-		background-color: rgba(0,0,1,1);
-	}*/
 
 	.hexBlock:nth-child(2n) {
 		top: calc(var(--hexHeightInCol)/2);

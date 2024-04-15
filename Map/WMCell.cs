@@ -16,9 +16,11 @@ namespace HexStrategyInRazor.Map
 		private Vector2 position = position;
 		public Vector2 Position { get => position; }
 
-		public List<WMCell> Neighbors = new ();
-		public List<WMCell> NeighborsSendArmy = new ();
-		//public IEnumerable<WMCell> NeighborsIncomeArmy => MapReference.AllCells.Where(x => x.NeighborsSendArmy.Contains(this));
+
+		public List<WMCell> Neighbors = new();
+		private readonly List<WMCell> neighborsSendArmy = new();
+		public List<WMCell> NeighborsSendArmy => new(neighborsSendArmy);
+		public IEnumerable<WMCell> NeighborsInputArmy => MapReference.AllCells.Where(x => x.NeighborsSendArmy.Contains(this));
 		//public IEnumerable<WMCell> NeighborsAllIncomeArmy
 		//{
 		//	get
@@ -70,7 +72,7 @@ namespace HexStrategyInRazor.Map
 			get
 			{
 				if (Controller == null)
-					return "None";
+					return "N";
 
 				return Controller.PlayerName;
 			}
@@ -81,7 +83,7 @@ namespace HexStrategyInRazor.Map
 			get
 			{
 				if (Controller == null)
-					return ColorTranslator.ToHtml(emptyColor);
+					return "#FFFFFF";
 				return ColorTranslator.ToHtml(Controller.PlayerColor);
 			}
 		}
@@ -90,6 +92,10 @@ namespace HexStrategyInRazor.Map
 		{
 			return new WMCellData()
 			{
+				positionX = (int)position.X,
+				positionY = (int)position.Y,
+				sendArmyToPositionX = NeighborsSendArmy.Select(x => x.position).Select(x => (int)x.X).ToList(),
+				sendArmyToPositionY = NeighborsSendArmy.Select(x => x.position).Select(x => (int)x.Y).ToList(),
 				unitsCount = UnitsCount ?? 0,
 				positionId = ID,
 				controllerName = Controller == null ? "N" : Controller.PlayerName,
@@ -110,7 +116,7 @@ namespace HexStrategyInRazor.Map
 					this.UnitsCount += (unitsCount - 1);
 					Controller = side;
 					ControllerChangedAtLastTurn = true;
-					NeighborsSendArmy.Clear();
+					neighborsSendArmy.Clear();
 				} else
 				{
 					if (this.UnitsCount - unitsCount > 0)
@@ -121,13 +127,13 @@ namespace HexStrategyInRazor.Map
 						this.UnitsCount = unitsCount - this.UnitsCount;
 						Controller = side;
 						ControllerChangedAtLastTurn = true;
-						NeighborsSendArmy.Clear();
+						neighborsSendArmy.Clear();
 					} else
 					{
 						UnitsCount = 0;
 						Controller = null;
 						ControllerChangedAtLastTurn = true;
-						NeighborsSendArmy.Clear();
+						neighborsSendArmy.Clear();
 					}
 
 				}
@@ -144,48 +150,46 @@ namespace HexStrategyInRazor.Map
 
 		public void EndTurn()
 		{
-			if (Controller is not null && NeighborsSendArmy.Count > 0)
+			if (Controller is not null && neighborsSendArmy.Count > 0)
 			{
-				int splitCount = UnitsCount.GetValueOrDefault() / NeighborsSendArmy.Count;
-				if (splitCount == 0)
-				{
-					return;
-				}
-
-				foreach (var x in NeighborsSendArmy)
-				{
-					x.AddUnitsCount(Controller, splitCount);
-				}
-
-				UnitsCount = UnitsCount.GetValueOrDefault() % NeighborsSendArmy.Count;
-				int cellIndex = 0;
-
-				for (; UnitsCount > 0; UnitsCount--)
-				{
-					NeighborsSendArmy[0].AddUnitsCount(Controller, 1);
-					cellIndex++;
-					if (cellIndex >= NeighborsSendArmy.Count)
-					{
-						cellIndex = 0;
-					}
-				}
+				SpentLeftUnits();
 			}
 			ControllerChangedAtLastTurn = false;
 		}
 
+		private void SpentLeftUnits()
+		{
+			if (Controller == null)
+			{
+				return;
+			}
+
+			int cellIndex = 0;
+
+			for (; UnitsCount > 0; UnitsCount--)
+			{
+				neighborsSendArmy[cellIndex].AddUnitsCount(Controller, 1);
+				cellIndex++;
+				if (cellIndex >= neighborsSendArmy.Count)
+				{
+					cellIndex = 0;
+				}
+			}
+		}
+
 		public void ClearAllWays()
 		{
-			NeighborsSendArmy.Clear();
+			neighborsSendArmy.Clear();
 		}
 
 		public void AddNeighborsSendArmy(WMCell endCell)
 		{
-			if (NeighborsSendArmy.Contains(endCell))
+			if (neighborsSendArmy.Contains(endCell))
 			{
-				NeighborsSendArmy.Remove(endCell);
+				neighborsSendArmy.Remove(endCell);
 			} else
 			{
-				NeighborsSendArmy.Add(endCell);
+				neighborsSendArmy.Add(endCell);
 			}
 		}
 	}

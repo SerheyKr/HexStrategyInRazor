@@ -3,8 +3,8 @@ using HexStrategyInRazor.Map.Map.DB.Interfaces;
 
 namespace HexStrategyInRazor.Map.DB.Interfaces
 {
-    public interface IUserRepository: IAbstractRepository<User>
+    public interface IUserRepository: IAbstractRepository<UserModel>
     {
-        public string AddWithErrorText(User entity, out bool foundedError);
+        
     }
 }

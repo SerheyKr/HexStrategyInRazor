@@ -4,20 +4,15 @@ using System.Numerics;
 
 namespace HexStrategyInRazor.Map
 {
-	public class AI : Player
+	public class AI(Color PlayerColor, string playerName) : Player(PlayerColor, playerName)
 	{
-		private int choisenStrategy = 0;
-
-		public AI(Color PlayerColor, string playerName) : base(PlayerColor, playerName)
-		{
-			choisenStrategy = 0; // TODO create various strategies
-		}
+		private readonly int choisenStrategy = 0;
 
 		public override void OnTurnEnd()
 		{
 			base.OnTurnEnd();
 
-			switch(choisenStrategy) 
+			switch (choisenStrategy) 
 			{
 				case 0:
 					{
@@ -28,22 +23,20 @@ namespace HexStrategyInRazor.Map
 		}
 
 		//We just rush to player
-		private void RushStrategy()
+		public void RushStrategy()
 		{
 			List<WMCell> listBotCells = CurrentMap.AllCells.Where(x => x.Controller == this).ToList();
 			List<WMCell> listPlayerCells = CurrentMap.AllCells.Where(x => x.Controller == CurrentMap.MainPlayer).ToList();
-			listBotCells.ForEach(x => x.ClearAllWays());
 
 			listBotCells.ForEach(cell =>
 			{
+				cell.ClearAllWays();
 				var path = CurrentMap.FindPath(cell, listPlayerCells.PickRandom());
 
-				if (path == null || path.Count < 2)
+				if (path != null && path.Count >= 2)
 				{
-					return;
+					cell.AddNeighborsSendArmy(path[1]);
 				}
-
-				cell.AddNeighborsSendArmy(path[1]);
 			});
 		}
 	}

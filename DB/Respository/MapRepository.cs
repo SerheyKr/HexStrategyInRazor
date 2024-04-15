@@ -1,26 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using HexStrategyInRazor.DB.Interfaces;
+using HexStrategyInRazor.DB.Models;
 using HexStrategyInRazor.Map.DB.Interfaces;
-using HexStrategyInRazor.DB;
 using HexStrategyInRazor.Map.DB.Models;
+using HexStrategyInRazor.Map.DB.Respository;
+using Microsoft.EntityFrameworkCore;
 
-namespace HexStrategyInRazor.Map.DB.Respository
+namespace HexStrategyInRazor.DB.Respository
 {
-	public class UserRespository : AbstractRepository<UserModel>, IUserRepository
+	public class MapRepository : AbstractRepository<MapModel>, IMapRepository
 	{
-		public UserRespository(WadbContext context) : base(context)
+		public MapRepository(WadbContext context) : base(context)
 		{
 
 		}
 
-		public async Task Add(UserModel entity)
+		public async Task Add(MapModel entity)
 		{
 			await dbSet.AddAsync(entity);
 
 			await context.SaveChangesAsync();
 		}
 
-		public async Task Delete(UserModel entity)
+		public async Task Delete(MapModel entity)
 		{
 			dbSet.Remove(entity);
 			await context.SaveChangesAsync();
@@ -37,17 +38,17 @@ namespace HexStrategyInRazor.Map.DB.Respository
 			}
 		}
 
-		public async Task<IEnumerable<UserModel>> GetAll()
+		public async Task<IEnumerable<MapModel>> GetAll()
 		{
 			return await dbSet.ToListAsync();
 		}
 
-		public async Task<UserModel?> GetById(int id)
+		public async Task<MapModel?> GetById(int id)
 		{
 			return await dbSet.FindAsync(id);
 		}
 
-		public async Task Update(UserModel entity)
+		public async Task Update(MapModel entity)
 		{
 			dbSet.Update(entity);
 			await context.SaveChangesAsync();

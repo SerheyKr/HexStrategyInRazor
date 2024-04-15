@@ -1,14 +1,15 @@
 ﻿using HexStrategyInRazor.Map.DB.Models;
+using System.Threading.Tasks;
 
 namespace HexStrategyInRazor.Map.Map.DB.Interfaces
 {
-    public interface IAbstractRepository<T> where T : BaseModel
+    public interface IAbstractRepository<T> where T : AbstractModel
     {
-        public void Add(T entity);
-        public void Delete(T entity);
-        public void DeleteById(int id);
-        public IEnumerable<T> GetAll();
-        public T? GetById(int id);
-        public void Update(T entity);
+        public Task Add(T entity);
+        public Task Delete(T entity);
+        public Task DeleteById(int id);
+        public Task<IEnumerable<T>> GetAll();
+        public Task<T?> GetById(int id);
+        public Task Update(T entity);
     }
 }

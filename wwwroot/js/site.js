@@ -82,11 +82,107 @@ function updateCellData() {
 		url: '/getMapData', // URL to your server endpoint to fetch data
 		method: 'GET',
 		success: function (json) {
-			let data = eval(JSON.parse(json));
-			//console.log(data);
+			let data = eval(JSON.parse(json.value));
+
 			data.Rows.forEach((element) => {
 				element.Cells.forEach((cell) => {
+
 					$(`#${cell.positionId}`).html(`U:${cell.unitsCount} <br />C:${cell.controllerName}`);
+
+					$("." + cell.positionId + "hexBlock").each(function () {
+						let backgrounds = [];
+
+						backgrounds.push("url(../images/grid.svg)");
+
+						if (cell.cellColorHTML == "Blue") {
+							for (let i = 0; i < cell.sendArmyToPositionX.length; i++) {
+								if (cell.positionY % 2 == 0) {
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
+										backgrounds.push("url(../images/Blue/gridRightBottom.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
+										backgrounds.push("url(../images/Blue/gridBottom.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
+										backgrounds.push("url(../images/Blue/gridLeftBottom.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
+										backgrounds.push("url(../images/Blue/gridTopLeft.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
+										backgrounds.push("url(../images/Blue/gridTop.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
+										backgrounds.push("url(../images/Blue/gridTopRight.svg)");
+									}
+								} else {
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
+										backgrounds.push("url(../images/Blue/gridTopRight.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
+										backgrounds.push("url(../images/Blue/gridRightBottom.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
+										backgrounds.push("url(../images/Blue/gridBottom.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
+										backgrounds.push("url(../images/Blue/gridLeftBottom.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
+										backgrounds.push("url(../images/Blue/gridTopLeft.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
+										backgrounds.push("url(../images/Blue/gridTop.svg)");
+									}
+								}
+							}
+						} else if (cell.cellColorHTML == "Red") {
+
+							for (let i = 0; i < cell.sendArmyToPositionX.length; i++) {
+								if (cell.positionY % 2 == 0) {
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
+										backgrounds.push("url(../images/Red/gridRightBottom.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
+										backgrounds.push("url(../images/Red/gridBottom.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
+										backgrounds.push("url(../images/Red/gridLeftBottom.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
+										backgrounds.push("url(../images/Red/gridTopLeft.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
+										backgrounds.push("url(../images/Red/gridTop.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
+										backgrounds.push("url(../images/Red/gridTopRight.svg)");
+									}
+								} else {
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
+										backgrounds.push("url(../images/Red/gridTopRight.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
+										backgrounds.push("url(../images/Red/gridRightBottom.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
+										backgrounds.push("url(../images/Red/gridBottom.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
+										backgrounds.push("url(../images/Red/gridLeftBottom.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
+										backgrounds.push("url(../images/Red/gridTopLeft.svg)");
+									}
+									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
+										backgrounds.push("url(../images/Red/gridTop.svg)");
+									}
+								}
+							}
+						}
+						$(this).css("background-image", backgrounds.join(", "))
+					})
+
 					let element = document.getElementById(cell.positionId);
 					element.style.color = cell.cellColorHTML;
 				});
@@ -113,7 +209,7 @@ function updateUserData() {
 		url: '/getUserData', // URL to your server endpoint to fetch data
 		method: 'GET',
 		success: function (json) {
-			let data = eval(JSON.parse(json));
+			let data = eval(JSON.parse(json.value));
 			/*$('#Monies').html("Current monies: " + data.Monies);*/
 			$('#TotalArmy').html("Total army: " + data.TotalArmy);
 			/*$('#TotalBuildings').html("Total buildings: " + data.TotalBuildings);*/
@@ -130,6 +226,8 @@ function sendArmyMoveData(FromId, ToId, Count)
 		method: 'POST',
 		data: dataToSend,
 	});
+
+	updateCellData();
 }
 
 $(window).click(function (e) {
@@ -139,7 +237,7 @@ $(window).click(function (e) {
 	if (currentTileId.id && elementMouseIsOver.id)
 	{
 		let armyCount = 1;
-		console.log(currentTileId.id + "->" + elementMouseIsOver.id + "(" + armyCount + ")");
+		//console.log(currentTileId.id + "->" + elementMouseIsOver.id + "(" + armyCount + ")");
 		sendArmyMoveData(currentTileId.id, elementMouseIsOver.id, armyCount);
 
 		currentTileId = "";

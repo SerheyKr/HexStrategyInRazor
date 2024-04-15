@@ -10,5 +10,9 @@
         public bool inBattle { get; set; }
         public string cellColorHTML { get; set; }
 
+        public int positionX { get; set; }
+        public int positionY { get; set; }
+        public List<int> sendArmyToPositionX { get; set; }
+        public List<int> sendArmyToPositionY { get; set; }
 	}
 }

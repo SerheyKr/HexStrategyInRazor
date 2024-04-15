@@ -52,11 +52,15 @@ background-image: url(@region.ImagePath);" ; onmousedown="console.log('@i')">
 			@for (int j = 0; j < row.Cells.Count(); j++)
 			{
 				var cell = row.Cells[j];
-				<div class="hexBlock">
+				<div class="hexBlock @(cell.ID + "hexBlock")" id="@(cell.ID + "hexBlock")">
 					<style>
 						@("." + @cell.ID)
 						{
 							color: @cell.CellColorHTML;
+						}
+						@("." + cell.ID + "hexBlock")
+						{
+							background-image: url("../images/grid.svg");
 						}
 					</style>
 					<div class="unselectable hexagon2 @cell.ID" id="@cell.ID" 
