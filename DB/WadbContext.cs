@@ -3,19 +3,21 @@ using HexStrategyInRazor.Map.DB.Interfaces;
 using HexStrategyInRazor.Map.DB.Models;
 using HexStrategyInRazor.Map.DB.Respository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer.Infrastructure.Internal;
 
 namespace HexStrategyInRazor.DB
 {
-	public class WadbContext(DbContextOptions<WadbContext> options, string connectionString) : DbContext(options)
+	public class WadbContext(DbContextOptions<WadbContext> options) : DbContext(options)
 	{
 		public DbSet<UserModel> Users { get; set; }
 		public DbSet<MapModel> Maps { get; set; }
 		public DbSet<CellModel> Cells { get; set; }
-		public DbSet<RawModel> Raws { get; set; }
+		public DbSet<RowModel> Rows { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseLazyLoadingProxies().UseSqlServer(connectionString);
+			var opt = options.FindExtension<SqlServerOptionsExtension>();
+			optionsBuilder.UseLazyLoadingProxies().UseSqlServer(opt.ConnectionString);
 		}
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,15 +29,15 @@ namespace HexStrategyInRazor.DB
 			.IsRequired(false);
 
 			modelBuilder.Entity<MapModel>()
-			.HasMany(map => map.Raws)
-			.WithOne(raw => raw.Map)
+			.HasMany(map => map.Rows)
+			.WithOne(row => row.Map)
 			.HasForeignKey(raw => raw.MapId)
 			.IsRequired(false);
 
-			modelBuilder.Entity<RawModel>()
+			modelBuilder.Entity<RowModel>()
 			.HasMany(raw => raw.Cells)
-			.WithOne(cell => cell.Raw)
-			.HasForeignKey(cell => cell.RawId)
+			.WithOne(cell => cell.Row)
+			.HasForeignKey(cell => cell.RowId)
 			.IsRequired(false);
 
 			modelBuilder.Entity<CellModel>()

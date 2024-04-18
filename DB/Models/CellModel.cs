@@ -6,19 +6,21 @@ namespace HexStrategyInRazor.DB.Models
 	public class CellModel: AbstractModel
 	{
 		public int UnitsCount { get; set; }
-		public int ControllerId { get; set; }
+		public string ControllerId { get; set; }
 		public int CellPositionX { get; set; }
 		public int CellPositionY { get; set; }
 
-		public int RawId { get; set; }
-		public virtual RawModel Raw { get; set; }
+		public bool IsControlledByBot { get; set; }
+		public int RowId { get; set; }
+		public virtual RowModel Row { get; set; }
 		public virtual List<PathModel> Paths { get; set; }
+		public int CellIndex { get; set; }
 
 		public CellModel() { }
 
-		public CellModel(int id, int rawId, int unitsCount, int controllerId, int cellPositionX, int cellPositionY) : base(id)
+		public CellModel(int id, int rowId, int unitsCount, string controllerId, int cellPositionX, int cellPositionY) : base(id)
 		{
-			RawId = rawId;
+			RowId = rowId;
 			UnitsCount = unitsCount;
 			ControllerId = controllerId;
 			CellPositionX = cellPositionX;

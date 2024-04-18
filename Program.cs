@@ -7,14 +7,13 @@ using HexStrategyInRazor.Managers;
 using HexStrategyInRazor.Map.DB.Respository;
 using HexStrategyInRazor.DB.Respository;
 using Microsoft.Extensions.DependencyInjection;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace HexStrategyInRazor
 {
 	public static class Program
 	{
-		private static WadbContext context;
 		private static WebApplication application;
-		private static IConfigurationRoot configuration;
 
 		public const string userIdCookieName = "USERID";
 		public static readonly CookieOptions cookieOptions = new CookieOptions()
@@ -22,67 +21,37 @@ namespace HexStrategyInRazor
 			Path = @"\",
 			HttpOnly = true,
 			IsEssential = true,
-			Expires = DateTime.Now.AddMonths(1) // TODO think about it
+			Expires = DateTime.Now.AddMonths(1) // TODO
 		};
 
-		public static WadbContext Context { get => context;}
 		public static WebApplication App { get => application;}
-		public static IConfigurationRoot Configuration { get => configuration;}
 
-		private static async Task Main(string[] args)
+		private static WadbContext context;
+
+		public static WadbContext GetContext()
 		{
+			var scope = application.Services.CreateAsyncScope();
+			var services = scope.ServiceProvider;
 
-			configuration = new ConfigurationBuilder()
-			.AddJsonFile("appsettings.json", optional: false)
-			.Build();
-
-			context = SetUpDb(configuration);
-
-			application = SetUpWebApplication();
-
-			return;
-
-			var mapRepo = new MapRepository(context);
-			var userRepo = new UserRespository(context);
-			var rawRepo = new RawRepository(context);
-			var cellRepo = new CellRepository(context);
-
-			await mapRepo.Add(new MapModel(0, "ABD"));
-			await userRepo.Add(new UserModel(0, 1, "ABD"));
-
-			await rawRepo.Add(new RawModel(0, 1));
-			await rawRepo.Add(new RawModel(0, 1));
-			await rawRepo.Add(new RawModel(0, 1));
-			await cellRepo.Add(new CellModel(0, 1, 1, 1, 1, 0));
-			await cellRepo.Add(new CellModel(0, 1, 2, 2, 2, 0));
-			await cellRepo.Add(new CellModel(0, 1, 3, 3, 3, 0));
-
-			var map = await mapRepo.GetById(1);
-
-			//context.UsersRepository.Add(new User() { Id = 0, UserName = "UserName", Password = "Password", Email = "7366723@stud.nau.edu.ua" });
-			//context.UsersRepository.Add(new User() { Id = 0, UserName = "Test", Password = "Test", Email = "7366723@stud.nau.edu.ua" });
-			//context.UsersRepository.Add(new User() { Id = 0, UserName = "Admin", Password = "123", Email = "7366723@stud.nau.edu.ua" });
+			return services.GetRequiredService<WadbContext>();
 		}
 
-		private static WadbContext SetUpDb(IConfigurationRoot configuration)
+		private static void Main(string[] args)
 		{
-			var options = new DbContextOptionsBuilder<WadbContext>();
-			WadbContext cont = new (options.Options, connectionString: configuration.GetConnectionString("connectionPath"));
-			cont.Database.EnsureDeleted();
-			if (cont.Database.EnsureCreated())
-			{
-				Console.WriteLine("DB created");
-			}
-
-			return cont;
+			SetUpWebApplication();
 		}
 
-		private static WebApplication SetUpWebApplication()
+		private static async Task SetUpWebApplication()
 		{
 			WebApplicationBuilder builder = WebApplication.CreateBuilder();
 
+			builder.Configuration.SetBasePath(Directory.GetCurrentDirectory());
+			builder.Configuration.AddJsonFile("appsettings.json").AddEnvironmentVariables();
+
 			// Add services to the container.
 			builder.Services.AddRazorPages();
+
+			builder.Services.AddDbContext<WadbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
 
 			builder.Services.Configure<CookiePolicyOptions>(options => 
 			{
@@ -114,12 +83,11 @@ namespace HexStrategyInRazor
 
 			//app.MapGet("/getData", (HttpContext context) => $"COOKIES DUDE: {context.Request.Cookies[userIdCookieName]}");
 			//app.MapGet("/getCellData", (int xCoords, int yCoords) => $"Coords - {xCoords} : {yCoords}");
-			app.MapGet("/getMapData", WorldMapManager.GetMapData);
-			app.MapGet("/getUserData", WorldMapManager.GetPlayerInfo);
+			app.MapGet("/getMapData", handler: WorldMapManager.GetMapData);
 
-			app.MapPost("/sendArmyData", WorldMapManager.SendArmy);
-			app.MapPost("/restartMap", WorldMapManager.RestartMap);
-			app.MapPost("/endTurn", WorldMapManager.EndTurn);
+			app.MapPost("/sendArmyData", handler: WorldMapManager.SendArmy);
+			app.MapPost("/restartMap", handler: WorldMapManager.RestartMap);
+			app.MapPost("/endTurn", handler: WorldMapManager.EndTurn);
 
 			app.UseRouting();
 
@@ -130,11 +98,20 @@ namespace HexStrategyInRazor
 				
 			});
 
+			using (var scope = app.Services.CreateScope())
+			{
+				var services = scope.ServiceProvider;
+
+				context = services.GetRequiredService<WadbContext>();
+				context.Database.EnsureDeleted();
+				context.Database.EnsureCreated();
+			}
+
 			app.MapRazorPages();
 
-			app.Run();
+			application = app;
 
-			return app;
+			app.Run();
 		}
 	}
 }

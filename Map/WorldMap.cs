@@ -1,6 +1,8 @@
-﻿using HexStrategyInRazor.Generator;
+﻿using HexStrategyInRazor.DB.Models;
+using HexStrategyInRazor.Generator;
 using HexStrategyInRazor.Managers;
 using HexStrategyInRazor.Map.Data;
+using HexStrategyInRazor.Map.DB.Models;
 using System.Drawing;
 using System.Numerics;
 
@@ -11,28 +13,26 @@ namespace HexStrategyInRazor.Map
 		private const int MOVE_BASIC_COST = 10;
 		private const int INITIAL_SEMAPHORE_COUNT = 1;
 		private const int MAXIMUM_SEMAPHORE_COUNT = 1;
+		private const int SPAWN_UNITS_COUNT = 5;
 
 		public List<WMRow> Rows = new List<WMRow>();
-		public List<WMCell> AllCells = new List<WMCell>();
+		public List<WMCell> AllCells => Rows.SelectMany(x => x.Cells).ToList();
 		public List<Player> Players = new List<Player>();
-		public string HostId;
+		public string HostId => MainPlayer.PlayerId;
 		public Vector2 Sizes;
-		public bool WorldSuspended = false;
 		public int TotalTurnsCount = 0;
 
 		public bool IsEnded = false;
 		private Player winSide;
 
-		private readonly Semaphore pool = new(INITIAL_SEMAPHORE_COUNT, MAXIMUM_SEMAPHORE_COUNT);
+		private readonly Semaphore semaphore = new(INITIAL_SEMAPHORE_COUNT, MAXIMUM_SEMAPHORE_COUNT);
 
-		public DateTime Expires;
-
-		public Player MainPlayer;
+		public Player MainPlayer => Players.Find(x => x.IsMainPlayer);
+		public int DbId;
 
 		private WorldMap()
 		{
-			Expires = DateTime.Now.AddMonths(1);
-			WorldMapManager.WorldMaps.Add(this);
+
 		}
 
 		#region A*
@@ -136,12 +136,13 @@ namespace HexStrategyInRazor.Map
 
 			if (startCell.Controller == endCell.Controller && startCell.NeighborsInputArmy.ToList().Contains(endCell))
 			{
-				startCell.AddNeighborsSendArmy(endCell);
+				startCell.AddNeighborsSendArmy(endCell).Wait();
 				(startCell, endCell) = (endCell, startCell);
 			}
 
-			startCell.AddNeighborsSendArmy(endCell);
+			startCell.AddNeighborsSendArmy(endCell).Wait();
 		}
+
 		public void CreateMovement(WMCell startCell, WMCell endCell)
 		{
 			if (!startCell.Neighbors.Contains(endCell))
@@ -149,24 +150,25 @@ namespace HexStrategyInRazor.Map
 				return;
 			}
 
-			startCell.AddNeighborsSendArmy(endCell);
+			startCell.AddNeighborsSendArmy(endCell).Wait();
 		}
 
 		private void GenerateBasicCells(Vector2 sizes)
 		{
 			Rows.Clear();
-			AllCells.Clear();
 			Sizes = sizes;
 
 			for (int i = 0; i < sizes.X; i++)
 			{
-				var nr = new WMRow();
+				var nr = new WMRow(this)
+				{
+					PositionX = i
+				};
 				Rows.Add(nr);
 				for (int j = 0; j < sizes.Y; j++)
 				{
-					var nc = new WMCell(new Vector2(i, j), this);
+					var nc = new WMCell(new Vector2(i, j), this, nr);
 					nr.Cells.Add(nc);
-					AllCells.Add(nc);
 				}
 			}
 		}
@@ -230,7 +232,7 @@ namespace HexStrategyInRazor.Map
 		private void SetPlayer(Player player, WMCell cell)
 		{
 			cell.Controller = player;
-			cell.UnitsCount = 5;
+			cell.UnitsCount = SPAWN_UNITS_COUNT;
 			player.CurrentMap = this;
 		}
 
@@ -238,7 +240,6 @@ namespace HexStrategyInRazor.Map
 		{
 			Players = players;
 			//We basicly have only 2 players...
-			MainPlayer = players.Find(x => x.IsMainPlayer);
 
 			SetPlayer(players[0], Rows[0].Cells[0]);
 			SetPlayer(players[1], Rows[^1].Cells[^1]);
@@ -252,26 +253,38 @@ namespace HexStrategyInRazor.Map
 			map.SetNeighbors();
 
 			//TODO what if none of players is main?
-			map.HostId = players.Find(x => x.IsMainPlayer).User.UserId;
-
-			players.ForEach(x => x.OnTurnEnd());
-
+			var mainUser = players.Find(x => x.IsMainPlayer);
+			if (mainUser == null)
+			{
+				throw new ArgumentException();
+			}
 			return map;
+		}
+
+		public void OnTurnEnd()
+		{
+			Players.ForEach(x => x.OnTurnEnd());
 		}
 
 		public WorldMapData ToData()
 		{
-			pool.WaitOne();
+			//semaphore.WaitOne();
 
 			List<WMRowData> x = new List<WMRowData>(Rows.Select(x => x.ToData()));
 
-			pool.Release();
+			//semaphore.Release();
 			return new WorldMapData()
 			{
 				Rows = x,
 				TurnsCount = TotalTurnsCount + 1,
 				IsEnded = IsEnded,
-				EndText = GenerateEndText()
+				EndText = GenerateEndText(),
+				TotalArmy = AllCells.FindAll(x =>
+				{
+					if (x.Controller == null)
+						return false;
+					return x.Controller.IsMainPlayer;
+				}).Sum(x => x.UnitsCount) ?? 0
 			};
 		}
 
@@ -296,16 +309,22 @@ namespace HexStrategyInRazor.Map
 
 		public void Restart()
 		{
-			pool.WaitOne();
-			GenerateBasicCells(Sizes);
-			PlacePlayers(Players);
-			SetNeighbors();
+			//semaphore.WaitOne();
+			//GenerateBasicCells(Sizes);
+			//SetNeighbors();
 
 			IsEnded = false;
 			TotalTurnsCount = 0;
+			AllCells.ForEach(x =>
+			{
+				x.Controller = null;
+				x.UnitsCount = 0;
+				x.ClearAllWays();
+			});
+			PlacePlayers(Players);
 
 			Players.ForEach(x => x.OnTurnEnd());
-			pool.Release();
+			//semaphore.Release();
 		}
 
 		public void EndTurn()
@@ -324,6 +343,54 @@ namespace HexStrategyInRazor.Map
 
 			Players.ForEach(player => player.OnTurnEnd());
 			WinCheck();
+		}
+
+		public static WorldMap? Load(MapModel map, Player user)
+		{
+			var player = user;
+
+			if (map == null)
+				return null;
+
+			var wmap = new WorldMap()
+			{
+				DbId = map.Id,
+			};
+
+			player.CurrentMap = wmap;
+			wmap.Players.Add(user);
+			var ai = new AI
+			{
+				PlayerId = map.BotId,
+				CurrentMap = wmap
+			};
+			wmap.Players.Add(ai);
+
+			wmap.Rows = map.Rows.Select(x => WMRow.Load(x, wmap)).ToList();
+
+			player!.CurrentMap = wmap;
+
+			wmap.AllCells.ForEach(cell => cell.LoadPathes(wmap));
+
+			wmap.TotalTurnsCount = map.TotalTurnsCount;
+
+			wmap.SetNeighbors();
+
+			wmap.WinCheck();
+
+			return wmap;
+		}
+
+		public MapModel ToDBData()
+		{
+			return new MapModel()
+			{
+				Id = DbId,
+				PlayerCookieId = this.HostId,
+				BotId = Players.Find(x => x is AI)!.PlayerId,
+				TotalTurnsCount = TotalTurnsCount,
+				Rows = Rows.Select(x => x.ToDBData()).ToList(),
+			};
 		}
 	}
 }

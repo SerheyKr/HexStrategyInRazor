@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace HexStrategyInRazor.Map.Map.DB.Interfaces
 {
-    public interface IAbstractRepository<T> where T : AbstractModel
+    public interface IAbstractRepository<T> where T : IAbstractModel
     {
         public Task Add(T entity);
         public Task Delete(T entity);

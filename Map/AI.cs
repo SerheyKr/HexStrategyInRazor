@@ -4,9 +4,19 @@ using System.Numerics;
 
 namespace HexStrategyInRazor.Map
 {
-	public class AI(Color PlayerColor, string playerName) : Player(PlayerColor, playerName)
+	public class AI: Player
 	{
 		private readonly int choisenStrategy = 0;
+
+		public AI(): base(Color.Red, "E")
+		{
+
+		}
+
+		public AI(Color PlayerColor, string playerName) : base(PlayerColor, playerName)
+		{
+			PlayerId = Guid.NewGuid().ToString();
+		}
 
 		public override void OnTurnEnd()
 		{
@@ -22,11 +32,14 @@ namespace HexStrategyInRazor.Map
 			}
 		}
 
-		//We just rush to player
+		//We just picking random player cell and moving to it
 		public void RushStrategy()
 		{
 			List<WMCell> listBotCells = CurrentMap.AllCells.Where(x => x.Controller == this).ToList();
 			List<WMCell> listPlayerCells = CurrentMap.AllCells.Where(x => x.Controller == CurrentMap.MainPlayer).ToList();
+
+			if (listPlayerCells.Count == 0) // We won
+				return;
 
 			listBotCells.ForEach(cell =>
 			{
@@ -35,7 +48,7 @@ namespace HexStrategyInRazor.Map
 
 				if (path != null && path.Count >= 2)
 				{
-					cell.AddNeighborsSendArmy(path[1]);
+					CurrentMap.CreateMovement(cell, path[1]);
 				}
 			});
 		}

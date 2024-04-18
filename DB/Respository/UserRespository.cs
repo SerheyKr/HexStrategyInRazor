@@ -28,6 +28,11 @@ namespace HexStrategyInRazor.Map.DB.Respository
 
 		public async Task DeleteById(int id)
 		{
+			throw new NotImplementedException();
+		}
+
+		public async Task DeleteById(string id)
+		{
 			var toRemove = await dbSet.FindAsync(id);
 
 			if (toRemove != null)
@@ -42,9 +47,14 @@ namespace HexStrategyInRazor.Map.DB.Respository
 			return await dbSet.ToListAsync();
 		}
 
-		public async Task<UserModel?> GetById(int id)
+		public async Task<UserModel?> GetById(string id)
 		{
 			return await dbSet.FindAsync(id);
+		}
+
+		public Task<UserModel?> GetById(int id)
+		{
+			throw new NotImplementedException();
 		}
 
 		public async Task Update(UserModel entity)

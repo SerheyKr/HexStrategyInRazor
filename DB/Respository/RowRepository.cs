@@ -5,21 +5,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HexStrategyInRazor.DB.Respository
 {
-	public class RawRepository : AbstractRepository<RawModel>, IRawRepository
+	public class RowRepository : AbstractRepository<RowModel>, IRawRepository
 	{
-		public RawRepository(WadbContext context) : base(context)
+		public RowRepository(WadbContext context) : base(context)
 		{
 
 		}
 
-		public async Task Add(RawModel entity)
+		public async Task Add(RowModel entity)
 		{
 			await dbSet.AddAsync(entity);
 
 			await context.SaveChangesAsync();
 		}
 
-		public async Task Delete(RawModel entity)
+		public async Task Delete(RowModel entity)
 		{
 			dbSet.Remove(entity);
 			await context.SaveChangesAsync();
@@ -36,17 +36,17 @@ namespace HexStrategyInRazor.DB.Respository
 			}
 		}
 
-		public async Task<IEnumerable<RawModel>> GetAll()
+		public async Task<IEnumerable<RowModel>> GetAll()
 		{
 			return await dbSet.ToListAsync();
 		}
 
-		public async Task<RawModel?> GetById(int id)
+		public async Task<RowModel?> GetById(int id)
 		{
 			return await dbSet.FindAsync(id);
 		}
 
-		public async Task Update(RawModel entity)
+		public async Task Update(RowModel entity)
 		{
 			dbSet.Update(entity);
 			await context.SaveChangesAsync();

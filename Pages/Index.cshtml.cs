@@ -19,45 +19,48 @@ namespace HexStrategyInRazor.Pages
 			_logger = logger;
 		}
 
-		public void OnGetAsync()
+		public async Task OnGetAsync()
 		{
 			string? userId = Request.Cookies[Program.userIdCookieName];
 
 			if (string.IsNullOrEmpty(userId))
 			{
-				Response.Cookies.Append(Program.userIdCookieName, Encryption.Encrypt(Guid.NewGuid().ToString()), Program.cookieOptions);
-				PlayerManager.AllUsers.Add(new BrowserUser()
-				{
-					UserId = userId
-				});
+				userId = Guid.NewGuid().ToString();
+				Response.Cookies.Append(Program.userIdCookieName, Encryption.Encrypt(userId), Program.cookieOptions);
+				await WorldMapManager.AddPlayer(new Player() { PlayerId = userId });
 			} else
 			{
 				userId = Encryption.Decrypt(userId);
 			}
 
-			var user = PlayerManager.AllUsers.Find(x => x.UserId == userId);
+			var user = await WorldMapManager.GetPlayer(userId);
 			if (user == null)
 			{
-				user = new BrowserUser() { UserId = userId };
-				PlayerManager.AllUsers.Add(user);
+				user = new Player() { PlayerId = userId };
+				await WorldMapManager.AddPlayer(user);
 			}
-			if (user.UserCurrentWorld == null)
+			var map = await WorldMapManager.GetMap(user);
+			if (map == null)
 			{
-				currentPlayer = new Player(Color.Blue, "F", user, true);
+				user.PlayerColor = Color.Blue;
+				user.PlayerName = "Y";
+				user.IsMainPlayer = true;
 				var players = new List<Player>()
 				{
-					currentPlayer,
+					user,
 					new AI(Color.Red, "E")
 				};
 
-				newMap = WorldMap.CreateMap(new System.Numerics.Vector2(4, 8), players);
-				user.UserCurrentWorld = newMap;
+				newMap = await WorldMapManager.CreateMapAsync(new System.Numerics.Vector2(4, 8), players);
+				user.CurrentMap = newMap;
+				user.MapId = newMap.DbId;
+				await WorldMapManager.UpdatePlayer(user);
 			}
 			else
 			{
-				newMap = user.UserCurrentWorld;
-				currentPlayer = user.UserCurrentWorld.Players.Single(x => x.User?.UserId == userId);
+				newMap = user.CurrentMap;
 			}
+			currentPlayer = user;
 		}
 	}
 }
