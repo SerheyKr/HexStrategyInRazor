@@ -36,7 +36,7 @@ namespace HexStrategyInRazor
 			.AddJsonFile("appsettings.json", optional: false)
 			.Build();
 
-			context = SetUpDb(configuration);
+			//context = SetUpDb(configuration);
 
 			application = SetUpWebApplication();
 
