@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HexStrategyInRazor.DB.Respository
 {
-	public class RowRepository : AbstractRepository<RowModel>, IRawRepository
+	public class RowRepository : AbstractRepository<RowModel>, IRowRepository
 	{
 		public RowRepository(WadbContext context) : base(context)
 		{
