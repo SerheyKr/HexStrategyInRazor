@@ -2,7 +2,7 @@
 
 namespace HexStrategyInRazor.Map.DB.Models
 {
-	public abstract class AbstractModel
+	public abstract class AbstractModel: IAbstractModel
 	{
 		[Key]
 		public int Id { get; set; }
@@ -12,5 +12,10 @@ namespace HexStrategyInRazor.Map.DB.Models
 		{
 			Id = id;
 		}
+	}
+
+	public interface IAbstractModel
+	{
+		
 	}
 }

@@ -62,6 +62,9 @@ function RestartMap()
 	$.ajax({
 		url: '/restartMap',
 		method: 'POST',
+		success: function (json) {
+			UpdataMap(json);
+		},
 	});
 
 	updateAllData();
@@ -72,6 +75,9 @@ function EndTurn()
 	$.ajax({
 		url: '/endTurn',
 		method: 'POST',
+		success: function (json) {
+			UpdataMap(json);
+		},
 	});
 
 	updateAllData();
@@ -82,139 +88,139 @@ function updateCellData() {
 		url: '/getMapData', // URL to your server endpoint to fetch data
 		method: 'GET',
 		success: function (json) {
-			let data = eval(JSON.parse(json.value));
-
-			data.Rows.forEach((element) => {
-				element.Cells.forEach((cell) => {
-
-					$(`#${cell.positionId}`).html(`U:${cell.unitsCount} <br />C:${cell.controllerName}`);
-
-					$("." + cell.positionId + "hexBlock").each(function () {
-						let backgrounds = [];
-
-						backgrounds.push("url(../images/grid.svg)");
-
-						if (cell.cellColorHTML == "Blue") {
-							for (let i = 0; i < cell.sendArmyToPositionX.length; i++) {
-								if (cell.positionY % 2 == 0) {
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
-										backgrounds.push("url(../images/Blue/gridRightBottom.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
-										backgrounds.push("url(../images/Blue/gridBottom.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
-										backgrounds.push("url(../images/Blue/gridLeftBottom.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
-										backgrounds.push("url(../images/Blue/gridTopLeft.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
-										backgrounds.push("url(../images/Blue/gridTop.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
-										backgrounds.push("url(../images/Blue/gridTopRight.svg)");
-									}
-								} else {
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
-										backgrounds.push("url(../images/Blue/gridTopRight.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
-										backgrounds.push("url(../images/Blue/gridRightBottom.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
-										backgrounds.push("url(../images/Blue/gridBottom.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
-										backgrounds.push("url(../images/Blue/gridLeftBottom.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
-										backgrounds.push("url(../images/Blue/gridTopLeft.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
-										backgrounds.push("url(../images/Blue/gridTop.svg)");
-									}
-								}
-							}
-						} else if (cell.cellColorHTML == "Red") {
-
-							for (let i = 0; i < cell.sendArmyToPositionX.length; i++) {
-								if (cell.positionY % 2 == 0) {
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
-										backgrounds.push("url(../images/Red/gridRightBottom.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
-										backgrounds.push("url(../images/Red/gridBottom.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
-										backgrounds.push("url(../images/Red/gridLeftBottom.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
-										backgrounds.push("url(../images/Red/gridTopLeft.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
-										backgrounds.push("url(../images/Red/gridTop.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
-										backgrounds.push("url(../images/Red/gridTopRight.svg)");
-									}
-								} else {
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
-										backgrounds.push("url(../images/Red/gridTopRight.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == -1) {
-										backgrounds.push("url(../images/Red/gridRightBottom.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
-										backgrounds.push("url(../images/Red/gridBottom.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
-										backgrounds.push("url(../images/Red/gridLeftBottom.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == 1) {
-										backgrounds.push("url(../images/Red/gridTopLeft.svg)");
-									}
-									if (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 0) {
-										backgrounds.push("url(../images/Red/gridTop.svg)");
-									}
-								}
-							}
-						}
-						$(this).css("background-image", backgrounds.join(", "))
-					})
-
-					let element = document.getElementById(cell.positionId);
-					element.style.color = cell.cellColorHTML;
-				});
-			});
-			$('#TotalTurns').html("Turns count: " + data.TurnsCount);
-
-			if (data.IsEnded) {
-				if (!isAlerted) {
-					swal(data.EndText);
-					document.getElementById("endTurnButton").style.display = "none";
-				}
-				isAlerted = true;
-			} else
-			{
-				isAlerted = false;
-				document.getElementById("endTurnButton").style.display = "inline-block";
-			}
+			UpdataMap(json);
 		},
 	});
 }
 
-function updateUserData() {
-	$.ajax({
-		url: '/getUserData', // URL to your server endpoint to fetch data
-		method: 'GET',
-		success: function (json) {
-			let data = eval(JSON.parse(json.value));
-			/*$('#Monies').html("Current monies: " + data.Monies);*/
-			$('#TotalArmy').html("Total army: " + data.TotalArmy);
-			/*$('#TotalBuildings').html("Total buildings: " + data.TotalBuildings);*/
-		},
+function UpdataMap(json)
+{
+	let data = eval(JSON.parse(json.value));
+	$('#TotalArmy').html("Total army: " + data.TotalArmy);
+
+	data.Rows.forEach((element) => {
+		element.Cells.forEach((cell) => {
+
+			$(`#${cell.positionId}`).html(`U:${cell.unitsCount} <br />C:${cell.controllerName}`);
+
+			$("." + cell.positionId + "hexBlock").each(function () {
+				let backgrounds = [];
+
+				backgrounds.push("url(../images/grid.svg)");
+
+				if (cell.cellColorHTML == "Blue") {
+					for (let i = 0; i < cell.sendArmyToPositionX.length; i++) {
+						if (cell.positionY % 2 == 0) {
+							switch (true) {
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == -1):
+									backgrounds.push("url(../images/Blue/gridRightBottom.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 0):
+									backgrounds.push("url(../images/Blue/gridBottom.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == 1):
+									backgrounds.push("url(../images/Blue/gridLeftBottom.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 1):
+									backgrounds.push("url(../images/Blue/gridTopLeft.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 0):
+									backgrounds.push("url(../images/Blue/gridTop.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == -1):
+									backgrounds.push("url(../images/Blue/gridTopRight.svg)");
+									break;
+							}
+						} else {
+							switch (true) {
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == -1):
+									backgrounds.push("url(../images/Blue/gridTopRight.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == -1):
+									backgrounds.push("url(../images/Blue/gridRightBottom.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 0):
+									backgrounds.push("url(../images/Blue/gridBottom.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 1):
+									backgrounds.push("url(../images/Blue/gridLeftBottom.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == 1):
+									backgrounds.push("url(../images/Blue/gridTopLeft.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 0):
+									backgrounds.push("url(../images/Blue/gridTop.svg)");
+									break;
+							}
+						}
+					}
+				} else if (cell.cellColorHTML == "Red") {
+
+					for (let i = 0; i < cell.sendArmyToPositionX.length; i++) {
+						if (cell.positionY % 2 == 0) {
+							switch (true) {
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == -1):
+									backgrounds.push("url(../images/Red/gridRightBottom.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 0):
+									backgrounds.push("url(../images/Red/gridBottom.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == 1):
+									backgrounds.push("url(../images/Red/gridLeftBottom.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 1):
+									backgrounds.push("url(../images/Red/gridTopLeft.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 0):
+									backgrounds.push("url(../images/Red/gridTop.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == -1):
+									backgrounds.push("url(../images/Red/gridTopRight.svg)");
+									break;
+							}
+						} else {
+							switch (true) {
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == -1):
+									backgrounds.push("url(../images/Red/gridTopRight.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == -1):
+									backgrounds.push("url(../images/Red/gridRightBottom.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 0):
+									backgrounds.push("url(../images/Red/gridBottom.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == -1 && cell.positionY - cell.sendArmyToPositionY[i] == 1):
+									backgrounds.push("url(../images/Red/gridLeftBottom.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 0 && cell.positionY - cell.sendArmyToPositionY[i] == 1):
+									backgrounds.push("url(../images/Red/gridTopLeft.svg)");
+									break;
+								case (cell.positionX - cell.sendArmyToPositionX[i] == 1 && cell.positionY - cell.sendArmyToPositionY[i] == 0):
+									backgrounds.push("url(../images/Red/gridTop.svg)");
+									break;
+							}
+						}
+					}
+				}
+				$(this).css("background-image", backgrounds.join(", "))
+			})
+
+			let element = document.getElementById(cell.positionId);
+			element.style.color = cell.cellColorHTML;
+		});
 	});
+	$('#TotalTurns').html("Turns count: " + data.TurnsCount);
+
+	if (data.IsEnded) {
+		if (!isAlerted) {
+			swal(data.EndText);
+			document.getElementById("endTurnButton").style.display = "none";
+		}
+		isAlerted = true;
+	} else {
+		isAlerted = false;
+		document.getElementById("endTurnButton").style.display = "inline-block";
+	}
 }
 
 function sendArmyMoveData(FromId, ToId, Count)
@@ -225,9 +231,10 @@ function sendArmyMoveData(FromId, ToId, Count)
 		url: '/sendArmyData',
 		method: 'POST',
 		data: dataToSend,
+		success: function (json) {
+			UpdataMap(json);
+		},
 	});
-
-	updateCellData();
 }
 
 $(window).click(function (e) {
@@ -244,12 +251,6 @@ $(window).click(function (e) {
 	}
 });
 
-function updateAllData()
-{
-	updateCellData();
-	updateUserData();
-}
+updateCellData();
 
-updateAllData();
-
-setInterval(updateAllData, 500); // 5000 milliseconds = 5 seconds
+//setInterval(updateAllData, 500); // 5000 milliseconds = 5 seconds

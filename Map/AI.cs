@@ -4,25 +4,30 @@ using System.Numerics;
 
 namespace HexStrategyInRazor.Map
 {
-	public class AI(Color PlayerColor, string playerName) : Player(PlayerColor, playerName)
+	public class AI: Player
 	{
-		private readonly int choisenStrategy = 0;
+		public int stategy = 1;
+
+		public AI(): base(Color.Red, "E")
+		{
+
+		}
 
 		public override void OnTurnEnd()
 		{
 			base.OnTurnEnd();
 
-			switch (choisenStrategy) 
+			switch(stategy) 
 			{
 				case 0:
-					{
-						RushStrategy();
-						break;
-					}
+					SmartBot();
+					break;
+				case 1:
+					RushStrategy();
+					break;
 			}
 		}
 
-		//We just rush to player
 		public void RushStrategy()
 		{
 			List<WMCell> listBotCells = CurrentMap.AllCells.Where(x => x.Controller == this).ToList();
@@ -33,11 +38,48 @@ namespace HexStrategyInRazor.Map
 				cell.ClearAllWays();
 				var path = CurrentMap.FindPath(cell, listPlayerCells.PickRandom());
 
-				if (path != null && path.Count >= 2)
+				CreateMovement(cell, path);
+			});
+		}
+
+		private void SmartBot()
+		{
+			List<WMCell> listBotCells = CurrentMap.AllCells.Where(x => x.Controller == this).ToList();
+			List<WMCell> listPlayerCells = CurrentMap.AllCells.Where(x => x.Controller == CurrentMap.MainPlayer).ToList();
+
+			if (listPlayerCells.Count == 0) // We won
+				return;
+
+			listBotCells.ForEach(cell =>
+				cell.ClearAllWays());
+
+			listBotCells.ForEach(cell =>
+			{
+				if (cell.Neighbors.Exists(x => x.Controller != this))
 				{
-					cell.AddNeighborsSendArmy(path[1]);
+					cell.Neighbors.Where(x => x.Controller != this).ToList().ForEach(x => CurrentMap.CreateMovement(cell, x));
+				}
+				else
+				{
+					var path = CurrentMap.FindPath(cell, listPlayerCells.PickRandom());
+					CreateMovement(cell, path);
+
+					if (cell.UnitsCount > 1)
+					{
+						path = CurrentMap.FindPath(cell, CurrentMap.AllCells.PickRandom());
+						CreateMovement(cell, path);
+					}
+
 				}
 			});
+		}
+
+		private void CreateMovement(WMCell cell, List<WMCell>? path)
+		{
+			if (path != null && path.Count >= 2)
+			{
+				CurrentMap.CreateMovement(cell, path[1]);
+			}
 		}
 	}
 }

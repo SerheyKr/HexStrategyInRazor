@@ -7,7 +7,7 @@ namespace HexStrategyInRazor.Map.DB
 	public static class Encryption
 	{
 		private static string encryptionKey = "abc123";
-		private static byte[] encryptionKeyBytes = new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 };
+		private static byte[] encryptionKeyBytes = "Parol krutoi"u8.ToArray();
 
 
 		public static string Encrypt(string clearText)
@@ -31,28 +31,34 @@ namespace HexStrategyInRazor.Map.DB
 			}
 			return clearText;
 		}
-		public static string Decrypt(string cipherText)
+
+		public static string Decrypt(string? cipherText)
 		{
-			cipherText = cipherText.Replace(" ", "+");
-			if (cipherText.IsNullOrEmpty())
+			if (cipherText.IsNullOrEmpty() || cipherText == null)
 			{
-				return "";
+				return string.Empty;
 			}
 			byte[] cipherBytes = Convert.FromBase64String(cipherText);
-			using (Aes encryptor = Aes.Create())
+			try
 			{
-				Rfc2898DeriveBytes pdb = new (encryptionKey, encryptionKeyBytes, 4, HashAlgorithmName.SHA512);
-				encryptor.Key = pdb.GetBytes(32);
-				encryptor.IV = pdb.GetBytes(16);
-				using (MemoryStream ms = new ())
+				using (Aes encryptor = Aes.Create())
 				{
-					using (CryptoStream cs = new (ms, encryptor.CreateDecryptor(), CryptoStreamMode.Write))
+					Rfc2898DeriveBytes pdb = new(encryptionKey, encryptionKeyBytes, 4, HashAlgorithmName.SHA512);
+					encryptor.Key = pdb.GetBytes(32);
+					encryptor.IV = pdb.GetBytes(16);
+					using (MemoryStream ms = new())
 					{
-						cs.Write(cipherBytes, 0, cipherBytes.Length);
-						cs.Close();
+						using (CryptoStream cs = new(ms, encryptor.CreateDecryptor(), CryptoStreamMode.Write))
+						{
+							cs.Write(cipherBytes, 0, cipherBytes.Length);
+							cs.Close();
+						}
+						cipherText = Encoding.Unicode.GetString(ms.ToArray());
 					}
-					cipherText = Encoding.Unicode.GetString(ms.ToArray());
 				}
+			} catch
+			{
+				return string.Empty;
 			}
 			return cipherText;
 		}

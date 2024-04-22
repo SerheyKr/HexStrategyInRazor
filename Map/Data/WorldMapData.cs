@@ -6,5 +6,6 @@
 		public int TurnsCount { get; set; }
 		public bool IsEnded { get; set; }
 		public string EndText { get; set; }
+		public int TotalArmy { get; set; }
 	}
 }

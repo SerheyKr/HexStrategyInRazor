@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HexStrategyInRazor.Map.DB.Models
 {
-	public class UserModel: AbstractModel
+	public class UserModel: IAbstractModel
 	{
+		[Key]
 		public string CookieID { get; set; }
-		public int MapId { get; set; }
+		public int? MapId { get; set; }
 
 		public virtual MapModel Map { get; set; } = null!;
 
@@ -16,7 +17,7 @@ namespace HexStrategyInRazor.Map.DB.Models
 			
 		}
 
-		public UserModel(int id, int mapId, string cookieID): base(id)
+		public UserModel(int id, int mapId, string cookieID)
 		{
 			CookieID = cookieID;
 			MapId = mapId;

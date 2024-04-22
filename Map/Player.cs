@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using HexStrategyInRazor.DB.Models;
+using HexStrategyInRazor.Map.DB.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HexStrategyInRazor.Map
@@ -8,46 +9,58 @@ namespace HexStrategyInRazor.Map
 	{
 		public Color PlayerColor;
 		public string PlayerName;
-		public BrowserUser User;
 		public WorldMap CurrentMap;
 		public bool IsMainPlayer = false;
 		public string PlayerId;
-		public int TotalArmy;
+		public int DbId;
+		public int MapId;
 
 		public Player(Color PlayerColor, string playerName) // TODO for bots
 		{
 			this.PlayerColor = PlayerColor;
 			this.PlayerName = playerName;
-			PlayerId = Guid.NewGuid().ToString();
-			TotalArmy = CurrentMap?.AllCells.FindAll(x => x.Controller == this).Sum(x => x.UnitsCount) ?? 0;
 		}
 
-		public Player(Color PlayerColor, string playerName, BrowserUser controller, bool isMainPlayer = false)
+		public Player()
 		{
-			this.PlayerColor = PlayerColor;
-			this.PlayerName = playerName;
-			User = controller;
-			IsMainPlayer = isMainPlayer;
-			PlayerId = Guid.NewGuid().ToString();
+			
 		}
 
 		public virtual void OnTurnEnd()
 		{
-			TotalArmy = CurrentMap?.AllCells.FindAll(x => x.Controller == this).Sum(x => x.UnitsCount) ?? 0;
+
 		}
 
-		public PlayerData ToData()
+		public static Player? Load(UserModel userModel)
 		{
-			return new PlayerData
-			{ 
-				TotalArmy = CurrentMap?.AllCells.FindAll(x => x.Controller == this).Sum(x => x.UnitsCount) ?? 0,
+			if (userModel == null)
+				return null;
+			return new Player
+			{
+				IsMainPlayer = true,
+				PlayerId = userModel.CookieID,
+				PlayerColor = Color.Blue,
+				PlayerName = "Y",
+				MapId = userModel.MapId ?? 0,
 			};
 		}
-	}
 
-	public class PlayerData
-	{
-		public int TotalArmy { get; set; }
-		public int TotalBuildings { get; set; }
+		public UserModel ToDBData()
+		{
+			if (CurrentMap == null)
+			{
+				return new UserModel()
+				{
+					CookieID = PlayerId,
+					MapId = null,
+				};
+			}
+			
+			return new UserModel
+			{
+				CookieID = this.PlayerId,
+				MapId = CurrentMap.DbId
+			};
+		}
 	}
 }
