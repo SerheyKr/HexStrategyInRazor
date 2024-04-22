@@ -142,7 +142,7 @@ namespace HexStrategyInRazor.Map
 					this.UnitsCount += (unitsCount - 1);
 					Controller = side;
 					ControllerChangedAtLastTurn = true;
-					neighborsSendArmy.Clear();
+					ClearAllWays();
 				} else
 				{
 					if (this.UnitsCount - unitsCount > 0)
@@ -153,13 +153,13 @@ namespace HexStrategyInRazor.Map
 						this.UnitsCount = unitsCount - this.UnitsCount;
 						Controller = side;
 						ControllerChangedAtLastTurn = true;
-						neighborsSendArmy.Clear();
+						ClearAllWays();
 					} else
 					{
 						UnitsCount = 0;
 						Controller = null;
 						ControllerChangedAtLastTurn = true;
-						neighborsSendArmy.Clear();
+						ClearAllWays();
 					}
 
 				}

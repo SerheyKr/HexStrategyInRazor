@@ -25,8 +25,6 @@ namespace HexStrategyInRazor.Map
 		public bool IsEnded = false;
 		private Player winSide;
 
-		private readonly Semaphore semaphore = new(INITIAL_SEMAPHORE_COUNT, MAXIMUM_SEMAPHORE_COUNT);
-
 		public Player MainPlayer => Players.Find(x => x.IsMainPlayer);
 		public int DbId;
 
@@ -145,7 +143,7 @@ namespace HexStrategyInRazor.Map
 
 		public void CreateMovement(WMCell startCell, WMCell endCell)
 		{
-			if (!startCell.Neighbors.Contains(endCell))
+			if (!startCell.Neighbors.Contains(endCell) || startCell.NeighborsSendArmy.Contains(endCell))
 			{
 				return;
 			}
@@ -362,7 +360,7 @@ namespace HexStrategyInRazor.Map
 			var ai = new AI
 			{
 				PlayerId = map.BotId,
-				CurrentMap = wmap
+				CurrentMap = wmap,
 			};
 			wmap.Players.Add(ai);
 

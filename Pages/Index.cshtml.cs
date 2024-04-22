@@ -48,7 +48,10 @@ namespace HexStrategyInRazor.Pages
 				var players = new List<Player>()
 				{
 					user,
-					new AI(Color.Red, "E")
+					new AI()
+					{
+						PlayerId = Guid.NewGuid().ToString(),
+					}
 				};
 
 				newMap = await WorldMapManager.CreateMapAsync(new System.Numerics.Vector2(4, 8), players);

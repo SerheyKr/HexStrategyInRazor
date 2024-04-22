@@ -6,34 +6,43 @@ namespace HexStrategyInRazor.Map
 {
 	public class AI: Player
 	{
-		private readonly int choisenStrategy = 0;
+		public int stategy = 1;
 
 		public AI(): base(Color.Red, "E")
 		{
 
 		}
 
-		public AI(Color PlayerColor, string playerName) : base(PlayerColor, playerName)
-		{
-			PlayerId = Guid.NewGuid().ToString();
-		}
-
 		public override void OnTurnEnd()
 		{
 			base.OnTurnEnd();
 
-			switch (choisenStrategy) 
+			switch(stategy) 
 			{
 				case 0:
-					{
-						RushStrategy();
-						break;
-					}
+					SmartBot();
+					break;
+				case 1:
+					RushStrategy();
+					break;
 			}
 		}
 
-		//We just picking random player cell and moving to it
 		public void RushStrategy()
+		{
+			List<WMCell> listBotCells = CurrentMap.AllCells.Where(x => x.Controller == this).ToList();
+			List<WMCell> listPlayerCells = CurrentMap.AllCells.Where(x => x.Controller == CurrentMap.MainPlayer).ToList();
+
+			listBotCells.ForEach(cell =>
+			{
+				cell.ClearAllWays();
+				var path = CurrentMap.FindPath(cell, listPlayerCells.PickRandom());
+
+				CreateMovement(cell, path);
+			});
+		}
+
+		private void SmartBot()
 		{
 			List<WMCell> listBotCells = CurrentMap.AllCells.Where(x => x.Controller == this).ToList();
 			List<WMCell> listPlayerCells = CurrentMap.AllCells.Where(x => x.Controller == CurrentMap.MainPlayer).ToList();
@@ -42,15 +51,35 @@ namespace HexStrategyInRazor.Map
 				return;
 
 			listBotCells.ForEach(cell =>
-			{
-				cell.ClearAllWays();
-				var path = CurrentMap.FindPath(cell, listPlayerCells.PickRandom());
+				cell.ClearAllWays());
 
-				if (path != null && path.Count >= 2)
+			listBotCells.ForEach(cell =>
+			{
+				if (cell.Neighbors.Exists(x => x.Controller != this))
 				{
-					CurrentMap.CreateMovement(cell, path[1]);
+					cell.Neighbors.Where(x => x.Controller != this).ToList().ForEach(x => CurrentMap.CreateMovement(cell, x));
+				}
+				else
+				{
+					var path = CurrentMap.FindPath(cell, listPlayerCells.PickRandom());
+					CreateMovement(cell, path);
+
+					if (cell.UnitsCount > 1)
+					{
+						path = CurrentMap.FindPath(cell, CurrentMap.AllCells.PickRandom());
+						CreateMovement(cell, path);
+					}
+
 				}
 			});
+		}
+
+		private void CreateMovement(WMCell cell, List<WMCell>? path)
+		{
+			if (path != null && path.Count >= 2)
+			{
+				CurrentMap.CreateMovement(cell, path[1]);
+			}
 		}
 	}
 }
