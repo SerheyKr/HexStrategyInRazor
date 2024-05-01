@@ -212,19 +212,22 @@ namespace HexStrategyInRazor.Map
 			}
 		}
 
-		private void WinCheck()
+		private bool WinCheck()
 		{
 			if (!AllCells.Exists(x => x.Controller == Players[0]))
 			{
 				//You loosed
 				IsEnded = true;
 				winSide = Players[0];
+				return true;
 			} else if (!AllCells.Exists(x => x.Controller == Players[1]))
 			{
 				//Bot loosed
 				IsEnded = true;
 				winSide = Players[1];
+				return true;
 			}
+			return false;
 		}
 
 		private void SetPlayer(Player player, WMCell cell)
@@ -339,8 +342,9 @@ namespace HexStrategyInRazor.Map
 			} while (AllCells.Exists(cell => cell.UnitsCount > 0 && cell.NeighborsSendArmy.Count != 0));
 			AllCells.ForEach(cell => cell.EndAfter());
 
+			if (WinCheck())
+				return;
 			Players.ForEach(player => player.OnTurnEnd());
-			WinCheck();
 		}
 
 		public static WorldMap? Load(MapModel map, Player user)

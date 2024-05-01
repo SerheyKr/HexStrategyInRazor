@@ -8,6 +8,7 @@ using HexStrategyInRazor.Map.DB.Respository;
 using HexStrategyInRazor.DB.Respository;
 using Microsoft.Extensions.DependencyInjection;
 using static System.Net.Mime.MediaTypeNames;
+using System.Reflection;
 
 namespace HexStrategyInRazor
 {
@@ -45,7 +46,7 @@ namespace HexStrategyInRazor
 		{
 			WebApplicationBuilder builder = WebApplication.CreateBuilder();
 
-			builder.Configuration.SetBasePath(Directory.GetCurrentDirectory());
+			builder.Configuration.SetBasePath(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location.Substring(0, Assembly.GetEntryAssembly().Location.IndexOf("bin\\"))));
 			builder.Configuration.AddJsonFile("appsettings.json").AddEnvironmentVariables();
 
 			// Add services to the container.
@@ -103,7 +104,6 @@ namespace HexStrategyInRazor
 				var services = scope.ServiceProvider;
 
 				context = services.GetRequiredService<WadbContext>();
-				context.Database.EnsureDeleted();
 				context.Database.EnsureCreated();
 			}
 
