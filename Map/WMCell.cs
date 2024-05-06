@@ -185,10 +185,6 @@ namespace HexStrategyInRazor.Map
 
 		private void SpentLeftUnits()
 		{
-			if (Controller == null)
-			{
-				return;
-			}
 			if (cellIndex >= neighborsSendArmy.Count)
 			{
 				cellIndex = 0;

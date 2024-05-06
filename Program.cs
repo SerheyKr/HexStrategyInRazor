@@ -82,8 +82,6 @@ namespace HexStrategyInRazor
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 
-			//app.MapGet("/getData", (HttpContext context) => $"COOKIES DUDE: {context.Request.Cookies[userIdCookieName]}");
-			//app.MapGet("/getCellData", (int xCoords, int yCoords) => $"Coords - {xCoords} : {yCoords}");
 			app.MapGet("/getMapData", handler: WorldMapManager.GetMapData);
 
 			app.MapPost("/sendArmyData", handler: WorldMapManager.SendArmy);

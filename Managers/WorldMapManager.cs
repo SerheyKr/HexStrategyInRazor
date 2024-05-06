@@ -158,8 +158,6 @@ namespace HexStrategyInRazor.Managers
 			var moveData = JsonSerializer.Deserialize<UnitMoveData>(bodyStr);
 			wm.CreateMovement(player, moveData);
 
-			//await UpdateMap(wm);
-
 			return new OkObjectResult(JsonSerializer.Serialize(wm.ToData()));
 		}
 

@@ -5,45 +5,6 @@
 	ViewData["Title"] = "Home page";
 }
 
-@* <div class="text-center">
-	<h1 class="display-4">Welcome</h1>
-	<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-
-<ul>
-	@foreach (var user in Program.Context.UsersRepository.GetAll().ToList())
-	{
-		<li>@user.ToString()</li>
-	}
-</ul> *@
-
-@* @for (int i = 0; i < Program.wm.Regions.Count; i++)
-{
-	topPos = $"{40}px";
-	leftPos = $"{40}px";
-	region = Program.wm.Regions[i];
-	<span style="position: fixed; top: @topPos; left: @leftPos; position: absolute; background-color: transparent;
-background-image: url(@region.ImagePath);" ; onmousedown="console.log('@i')">
-		<img src="@region.ImagePath" id="buttonsWithImages"  />
-
-	</span>
-} *@
-
-@* <map id="@i" name="@i">
-	<area alt="" coords="140, 150, 140"  href=""  shape="circle" />
-	</map> *@
-@* <div id="data-container">
-	DATA
-</div>
-<div id="Monies">
-	Currnet monies: @Model.currentPlayer.Monies
-</div> *@
-@* <div class="slidecontainer">
-  <input type="range" min="1" max="10" value="10" class="slider" id="myRange">
-</div> *@
-
-@* <canvas width="120" height="120"></canvas> *@
-
 <section cite="hexMap">
 	@for (int i = 0; i < Model.newMap.Rows.Count; i++)
 	{
@@ -65,12 +26,10 @@ background-image: url(@region.ImagePath);" ; onmousedown="console.log('@i')">
 					</style>
 					<div class="unselectable hexagon2 @cell.ID" id="@cell.ID" 
 					onclick="" 
-					onmousedown = "currentTileId = @cell.ID"
-					@* console.log(@cell.ID);  onmouseup = "sentArmy(@cell.ID)" *@>
+					onmousedown = "currentTileId = @cell.ID">
 						U:@cell.UnitsCount<br />
 						C:@cell.ControllerName <br />
 					</div>
-					@* U:@cell.unitsCount B:@cell.buildingsCount D:@cell.defenceCount *@
 				</div>
 			}
 		</article>

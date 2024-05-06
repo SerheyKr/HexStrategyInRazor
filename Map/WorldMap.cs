@@ -11,8 +11,6 @@ namespace HexStrategyInRazor.Map
 	public class WorldMap
 	{
 		private const int MOVE_BASIC_COST = 10;
-		private const int INITIAL_SEMAPHORE_COUNT = 1;
-		private const int MAXIMUM_SEMAPHORE_COUNT = 1;
 		private const int SPAWN_UNITS_COUNT = 5;
 
 		public List<WMRow> Rows = new List<WMRow>();
@@ -255,11 +253,7 @@ namespace HexStrategyInRazor.Map
 
 			//TODO what if none of players is main?
 			var mainUser = players.Find(x => x.IsMainPlayer);
-			if (mainUser == null)
-			{
-				throw new ArgumentException();
-			}
-			return map;
+			return mainUser == null ? throw new ArgumentException() : map;
 		}
 
 		public void OnTurnEnd()
