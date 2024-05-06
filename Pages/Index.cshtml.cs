@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HexStrategyInRazor.Managers;
+using HexStrategyInRazor.Map;
+using HexStrategyInRazor.Map.DB;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Drawing;
-using HexStrategyInRazor.Generator;
-using HexStrategyInRazor.Map;
-using HexStrategyInRazor.Managers;
-using HexStrategyInRazor.Map.DB;
 
 namespace HexStrategyInRazor.Pages
 {
@@ -28,7 +26,8 @@ namespace HexStrategyInRazor.Pages
 				userId = Guid.NewGuid().ToString();
 				Response.Cookies.Append(Program.userIdCookieName, Encryption.Encrypt(userId), Program.cookieOptions);
 				await WorldMapManager.AddPlayer(new Player() { PlayerId = userId });
-			} else
+			}
+			else
 			{
 				userId = Encryption.Decrypt(userId);
 			}

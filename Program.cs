@@ -1,13 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using HexStrategyInRazor.DB;
-using HexStrategyInRazor.DB.Models;
-using HexStrategyInRazor.Map;
-using HexStrategyInRazor.Map.DB.Models;
 using HexStrategyInRazor.Managers;
-using HexStrategyInRazor.Map.DB.Respository;
-using HexStrategyInRazor.DB.Respository;
-using Microsoft.Extensions.DependencyInjection;
-using static System.Net.Mime.MediaTypeNames;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace HexStrategyInRazor
@@ -25,7 +18,7 @@ namespace HexStrategyInRazor
 			Expires = DateTime.Now.AddMonths(1) // TODO
 		};
 
-		public static WebApplication App { get => application;}
+		public static WebApplication App { get => application; }
 
 		private static WadbContext context;
 
@@ -54,7 +47,7 @@ namespace HexStrategyInRazor
 
 			builder.Services.AddDbContext<WadbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
 
-			builder.Services.Configure<CookiePolicyOptions>(options => 
+			builder.Services.Configure<CookiePolicyOptions>(options =>
 			{
 				options.CheckConsentNeeded = context => true;
 				options.MinimumSameSitePolicy = SameSiteMode.None;
@@ -94,7 +87,7 @@ namespace HexStrategyInRazor
 
 			app.UseCookiePolicy(new CookiePolicyOptions()
 			{
-				
+
 			});
 
 			using (var scope = app.Services.CreateScope())

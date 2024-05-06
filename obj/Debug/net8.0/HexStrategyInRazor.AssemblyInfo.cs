@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HexStrategyInRazor")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6fa530d69475bff6fa94b6ceb4d4f7fb730fc1aa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d5aaa6ef0f412b2fc3431a5c54e39191eb8dc932")]
 [assembly: System.Reflection.AssemblyProductAttribute("HexStrategyInRazor")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HexStrategyInRazor")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

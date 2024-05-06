@@ -1,12 +1,9 @@
-﻿using HexStrategyInRazor.DB;
-using HexStrategyInRazor.DB.Models;
+﻿using HexStrategyInRazor.DB.Models;
 using HexStrategyInRazor.DB.Respository;
-using HexStrategyInRazor.Generator;
 using HexStrategyInRazor.Map;
 using HexStrategyInRazor.Map.DB;
 using HexStrategyInRazor.Map.DB.Models;
 using HexStrategyInRazor.Map.DB.Respository;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.Numerics;
 using System.Text;
@@ -19,7 +16,7 @@ namespace HexStrategyInRazor.Managers
 		public static async Task<WorldMap?> GetMap(string userId)
 		{
 			var user = await GetPlayer(userId);
-			if (user == null) 
+			if (user == null)
 			{
 				return null;
 			}
@@ -34,7 +31,7 @@ namespace HexStrategyInRazor.Managers
 
 		public static async Task<WorldMap?> GetMap(Player user)
 		{
-			if (user == null) 
+			if (user == null)
 			{
 				return null;
 			}
@@ -170,7 +167,7 @@ namespace HexStrategyInRazor.Managers
 			{
 				return new BadRequestResult();
 			}
-			
+
 			WorldMap? wm = await GetMap(userId);
 			if (wm == null)
 			{

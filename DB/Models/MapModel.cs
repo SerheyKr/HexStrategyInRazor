@@ -2,7 +2,7 @@
 
 namespace HexStrategyInRazor.DB.Models
 {
-	public class MapModel: AbstractModel
+	public class MapModel : AbstractModel
 	{
 		public string PlayerCookieId { get; set; }
 		public string BotId { get; set; }
@@ -11,12 +11,12 @@ namespace HexStrategyInRazor.DB.Models
 		public virtual ICollection<RowModel> Rows { get; set; } = new List<RowModel>();
 		public virtual UserModel User { get; set; }
 
-		public MapModel() 
+		public MapModel()
 		{
-		
+
 		}
 
-		public MapModel(int id, string playerCookieId): base(id) 
+		public MapModel(int id, string playerCookieId) : base(id)
 		{
 			PlayerCookieId = playerCookieId;
 		}

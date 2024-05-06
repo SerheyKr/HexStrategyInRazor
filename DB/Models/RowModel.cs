@@ -2,7 +2,7 @@
 
 namespace HexStrategyInRazor.DB.Models
 {
-	public class RowModel: AbstractModel
+	public class RowModel : AbstractModel
 	{
 		public int MapId { get; set; }
 

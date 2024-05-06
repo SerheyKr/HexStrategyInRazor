@@ -1,7 +1,5 @@
-﻿using System.Drawing;
-using HexStrategyInRazor.DB.Models;
-using HexStrategyInRazor.Map.DB.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using HexStrategyInRazor.Map.DB.Models;
+using System.Drawing;
 
 namespace HexStrategyInRazor.Map
 {
@@ -23,7 +21,7 @@ namespace HexStrategyInRazor.Map
 
 		public Player()
 		{
-			
+
 		}
 
 		public virtual void OnTurnEnd()
@@ -55,7 +53,7 @@ namespace HexStrategyInRazor.Map
 					MapId = null,
 				};
 			}
-			
+
 			return new UserModel
 			{
 				CookieID = this.PlayerId,

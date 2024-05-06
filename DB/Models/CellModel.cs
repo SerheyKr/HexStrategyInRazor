@@ -1,9 +1,8 @@
 ﻿using HexStrategyInRazor.Map.DB.Models;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HexStrategyInRazor.DB.Models
 {
-	public class CellModel: AbstractModel
+	public class CellModel : AbstractModel
 	{
 		public int UnitsCount { get; set; }
 		public string ControllerId { get; set; }

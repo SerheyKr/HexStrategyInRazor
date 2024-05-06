@@ -3,14 +3,14 @@ using HexStrategyInRazor.Map.Data;
 
 namespace HexStrategyInRazor.Map
 {
-    public class WMRow
+	public class WMRow
 	{
 		public List<WMCell> Cells = new List<WMCell>();
 		public WorldMap MapRef;
 		public int DbId;
 		public int PositionX;
 
-		public WMRow(WorldMap mapRef) 
+		public WMRow(WorldMap mapRef)
 		{
 			MapRef = mapRef;
 		}
@@ -21,13 +21,13 @@ namespace HexStrategyInRazor.Map
 
 			cellsData.AddRange(Cells.Select(x => x.ToData()));
 
-			return new WMRowData() 
+			return new WMRowData()
 			{
 				Cells = cellsData,
 			};
 		}
 
-		public static WMRow Load (RowModel data, WorldMap map)
+		public static WMRow Load(RowModel data, WorldMap map)
 		{
 			var row = new WMRow(map);
 

@@ -3,7 +3,7 @@ using HexStrategyInRazor.Map.Map.DB.Interfaces;
 
 namespace HexStrategyInRazor.DB.Interfaces
 {
-	public interface IRowRepository: IAbstractRepository<RowModel>
+	public interface IRowRepository : IAbstractRepository<RowModel>
 	{
 	}
 }

@@ -1,12 +1,8 @@
 ﻿using HexStrategyInRazor.DB.Models;
 using HexStrategyInRazor.DB.Respository;
-using HexStrategyInRazor.Generator;
 using HexStrategyInRazor.Map.Data;
-using Svg;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
-using System.Security.Cryptography.Xml;
 
 namespace HexStrategyInRazor.Map
 {
@@ -135,7 +131,8 @@ namespace HexStrategyInRazor.Map
 			{
 				this.UnitsCount += unitsCount;
 
-			} else
+			}
+			else
 			{
 				if (Controller == null)
 				{
@@ -143,18 +140,21 @@ namespace HexStrategyInRazor.Map
 					Controller = side;
 					ControllerChangedAtLastTurn = true;
 					ClearAllWays();
-				} else
+				}
+				else
 				{
 					if (this.UnitsCount - unitsCount > 0)
 					{
 						this.UnitsCount -= unitsCount;
-					} else if (this.UnitsCount - unitsCount < 0)
+					}
+					else if (this.UnitsCount - unitsCount < 0)
 					{
 						this.UnitsCount = unitsCount - this.UnitsCount;
 						Controller = side;
 						ControllerChangedAtLastTurn = true;
 						ClearAllWays();
-					} else
+					}
+					else
 					{
 						UnitsCount = 0;
 						Controller = null;
@@ -214,7 +214,8 @@ namespace HexStrategyInRazor.Map
 			{
 				await new PathRepository(Program.GetContext()).DeleteById(x);
 				neighborsSendArmy.Remove(endCell);
-			} else
+			}
+			else
 			{
 				var path = new PathModel()
 				{

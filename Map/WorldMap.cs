@@ -1,9 +1,6 @@
 ﻿using HexStrategyInRazor.DB.Models;
-using HexStrategyInRazor.Generator;
 using HexStrategyInRazor.Managers;
 using HexStrategyInRazor.Map.Data;
-using HexStrategyInRazor.Map.DB.Models;
-using System.Drawing;
 using System.Numerics;
 
 namespace HexStrategyInRazor.Map
@@ -91,7 +88,7 @@ namespace HexStrategyInRazor.Map
 		{
 			List<WMCell> path = new List<WMCell>() { endNode };
 			var currentNode = endNode;
-			while (currentNode.CameFrom != null) 
+			while (currentNode.CameFrom != null)
 			{
 				path.Add(currentNode.CameFrom);
 				currentNode = currentNode.CameFrom;
@@ -186,7 +183,8 @@ namespace HexStrategyInRazor.Map
 							{ +1, 0 }, { -1, -1 }, { 0, -1 },
 							{ -1, 0 }, { -1, +1 }, { 0, +1 }
 						};
-					} else
+					}
+					else
 					{
 						coordsToCheck = new int[,]
 						{
@@ -218,7 +216,8 @@ namespace HexStrategyInRazor.Map
 				IsEnded = true;
 				winSide = Players[0];
 				return true;
-			} else if (!AllCells.Exists(x => x.Controller == Players[1]))
+			}
+			else if (!AllCells.Exists(x => x.Controller == Players[1]))
 			{
 				//Bot loosed
 				IsEnded = true;
@@ -291,7 +290,8 @@ namespace HexStrategyInRazor.Map
 				if (winSide == Players[0])
 				{
 					returnText = "You loosed to your opponent!\r\n";
-				} else if (winSide == Players[1])
+				}
+				else if (winSide == Players[1])
 				{
 					returnText = "You winned your opponent!\r\n";
 				}

@@ -1,8 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using HexStrategyInRazor.DB;
 using HexStrategyInRazor.Map.DB.Interfaces;
-using HexStrategyInRazor.DB;
 using HexStrategyInRazor.Map.DB.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HexStrategyInRazor.Map.DB.Respository
 {

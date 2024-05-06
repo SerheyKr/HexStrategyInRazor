@@ -1,7 +1,5 @@
 ﻿using HexStrategyInRazor.DB.Interfaces;
 using HexStrategyInRazor.DB.Models;
-using HexStrategyInRazor.Map.DB.Interfaces;
-using HexStrategyInRazor.Map.DB.Models;
 using HexStrategyInRazor.Map.DB.Respository;
 using Microsoft.EntityFrameworkCore;
 

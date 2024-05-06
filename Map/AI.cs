@@ -1,14 +1,12 @@
-﻿using HexStrategyInRazor.Generator;
-using System.Drawing;
-using System.Numerics;
+﻿using System.Drawing;
 
 namespace HexStrategyInRazor.Map
 {
-	public class AI: Player
+	public class AI : Player
 	{
 		public int stategy = 1;
 
-		public AI(): base(Color.Red, "E")
+		public AI() : base(Color.Red, "E")
 		{
 
 		}
@@ -17,7 +15,7 @@ namespace HexStrategyInRazor.Map
 		{
 			base.OnTurnEnd();
 
-			switch(stategy) 
+			switch (stategy)
 			{
 				case 0:
 					SmartBot();

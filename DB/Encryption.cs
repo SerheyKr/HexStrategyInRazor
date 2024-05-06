@@ -15,13 +15,13 @@ namespace HexStrategyInRazor.Map.DB
 			byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);
 			using (Aes encryptor = Aes.Create())
 			{
-				Rfc2898DeriveBytes pdb = new (encryptionKey, encryptionKeyBytes, 4, HashAlgorithmName.SHA512);
+				Rfc2898DeriveBytes pdb = new(encryptionKey, encryptionKeyBytes, 4, HashAlgorithmName.SHA512);
 
 				encryptor.Key = pdb.GetBytes(32);
 				encryptor.IV = pdb.GetBytes(16);
-				using (MemoryStream ms = new ())
+				using (MemoryStream ms = new())
 				{
-					using (CryptoStream cs = new (ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+					using (CryptoStream cs = new(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
 					{
 						cs.Write(clearBytes, 0, clearBytes.Length);
 						cs.Close();
@@ -56,7 +56,8 @@ namespace HexStrategyInRazor.Map.DB
 						cipherText = Encoding.Unicode.GetString(ms.ToArray());
 					}
 				}
-			} catch
+			}
+			catch
 			{
 				return string.Empty;
 			}
