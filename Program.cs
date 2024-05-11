@@ -95,6 +95,7 @@ namespace HexStrategyInRazor
 				var services = scope.ServiceProvider;
 
 				context = services.GetRequiredService<WadbContext>();
+				context.Database.EnsureDeleted();
 				context.Database.EnsureCreated();
 			}
 

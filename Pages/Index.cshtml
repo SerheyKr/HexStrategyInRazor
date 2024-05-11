@@ -2,7 +2,7 @@
 @using HexStrategyInRazor.Generator
 @model IndexModel
 @{
-	ViewData["Title"] = "Home page";
+	ViewData["Title"] = "Main page";
 }
 
 <section cite="hexMap">
@@ -28,7 +28,6 @@
 					onclick="" 
 					onmousedown = "currentTileId = @cell.ID">
 						U:@cell.UnitsCount<br />
-						C:@cell.ControllerName <br />
 					</div>
 				</div>
 			}

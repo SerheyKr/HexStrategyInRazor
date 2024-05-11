@@ -101,7 +101,7 @@ function UpdataMap(json)
 	data.Rows.forEach((element) => {
 		element.Cells.forEach((cell) => {
 
-			$(`#${cell.positionId}`).html(`U:${cell.unitsCount} <br />C:${cell.controllerName}`);
+			$(`#${cell.positionId}`).html(`U:${cell.unitsCount}`);
 
 			$("." + cell.positionId + "hexBlock").each(function () {
 				let backgrounds = [];
@@ -251,6 +251,24 @@ $(window).click(function (e) {
 	}
 });
 
+function updateRatio()
+{
+	let w = window.innerWidth;
+	let h = window.innerHeight;
+	//600: 500
+	let ratio = 1;
+	if (w < h) {
+		ratio = w / 600 * 0.4;
+	} else
+	{
+		ratio = h / 500 * 0.4;
+	}
+	console.log(`${w}: ${h} (${ratio})`);
+	document.documentElement.style.setProperty('--ratio', ratio)
+}
+
 updateCellData();
 
-//setInterval(updateAllData, 500); // 5000 milliseconds = 5 seconds
+updateRatio();
+
+window.addEventListener('resize', updateRatio);
